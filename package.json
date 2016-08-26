@@ -1,0 +1,17 @@
+{
+  "name": "cereal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^2.0.0",
+    "mongoose": "^4.5.10",
+    "trim": "0.0.1",
+    "twit": "^2.2.4"
+  }
+}
