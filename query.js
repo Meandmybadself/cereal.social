@@ -27,7 +27,13 @@ const OLDEST_POST = moment().subtract(PAST_HOURS, 'hours').toDate()
 Cereal.aggregate(
   {$match: {
       date: {$gt: OLDEST_POST}
-  }}
+  }},
+  {$unwind: '$cereal'},
+  {$group: {
+    _id: '$cereal',
+    count: {$sum:1}
+  }},
+  {$sort: {'count': -1}}
 )
   .exec((err, rsp) => {
     console.log(err, rsp)
