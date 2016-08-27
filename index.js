@@ -32,6 +32,31 @@ mongoose.connect('mongodb://127.0.0.1/cereals', {
   }
 })
 
+function emitUpdate() {
+  const PAST_HOURS = 24
+  const OLDEST_POST = moment().subtract(PAST_HOURS, 'hours').toDate()
+
+  Cereal.aggregate(
+    {$match: {
+        date: {$gt: OLDEST_POST}
+    }},
+    {$unwind: '$cereal'},
+    {$group: {
+      _id: '$cereal',
+      count: {$sum:1}
+    }},
+    {$sort: {'count': -1}}
+  )
+    .exec((err, rsp) => {
+      //console.log(err, rsp)
+      if (!err) {
+
+      } else {
+
+      }
+    })
+}
+
 function getCerealForText (txt) {
   txt = txt.toLowerCase()
   let tl = terms.length

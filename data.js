@@ -42,8 +42,8 @@ module.exports = {
     {'id': 'crispix', 'label': 'Crispix'},
     {'id': 'smorz', 'label': 'Smorz'},
     {'id': 'krave', 'label': 'Krave'},
-    {'id': 'ohs', 'label': "Oh's"},
-    {'id': 'trix', 'label': 'Trix'},
+  //  {'id': 'ohs', 'label': "Oh's"},
+  //  {'id': 'trix', 'label': 'Trix'},
     {'id': 'kix', 'label': 'Kix'}
   ]
 }
