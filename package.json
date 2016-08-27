@@ -10,8 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^2.0.0",
+    "moment": "^2.14.1",
     "mongoose": "^4.5.10",
-    "trim": "0.0.1",
     "twit": "^2.2.4"
   }
 }
