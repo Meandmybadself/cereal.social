@@ -5,6 +5,7 @@ require('dotenv').config()
 const Twit = require('twit')
 const data = require('./data.js')
 const mongoose = require('mongoose')
+const io = require('socket.io')
 
 let terms = []
 data.cereals.forEach((el) => {
@@ -32,7 +33,13 @@ mongoose.connect('mongodb://127.0.0.1/cereals', {
   }
 })
 
-function emitUpdate() {
+let socketServer = io(8081)
+socketServer.on('connection', (socket) => {
+  console.log('connection')
+  emitUpdate()
+})
+
+function emitUpdate () {
   const PAST_HOURS = 24
   const OLDEST_POST = moment().subtract(PAST_HOURS, 'hours').toDate()
 
@@ -42,17 +49,16 @@ function emitUpdate() {
     }},
     {$unwind: '$cereal'},
     {$group: {
-      _id: '$cereal',
-      count: {$sum:1}
+        _id: '$cereal',
+        count: {$sum: 1}
     }},
     {$sort: {'count': -1}}
   )
     .exec((err, rsp) => {
-      //console.log(err, rsp)
       if (!err) {
-
+        socketServer.emit('update', rsp[0])
       } else {
-
+        console.log('Error in query.', err)
       }
     })
 }
@@ -114,6 +120,7 @@ function initTwitter () {
         Cereal.create(obj)
           .then(() => {
             console.log('Order persisted in DB.')
+            emitUpdate()
           }).catch((e) => {
           console.log('Error in persisting record to DB.', e)
         })
