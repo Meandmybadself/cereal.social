@@ -6,6 +6,7 @@ const Twit = require('twit')
 const data = require('./data.js')
 const mongoose = require('mongoose')
 const io = require('socket.io')
+const moment = require('moment')
 
 let terms = []
 data.cereals.forEach((el) => {
@@ -33,7 +34,7 @@ mongoose.connect('mongodb://127.0.0.1/cereals', {
   }
 })
 
-let socketServer = io(8081)
+let socketServer = io(2052)
 socketServer.on('connection', (socket) => {
   console.log('connection')
   emitUpdate()
