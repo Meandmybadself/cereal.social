@@ -57,7 +57,7 @@ function emitUpdate () {
   )
     .exec((err, rsp) => {
       if (!err) {
-        socketServer.emit('update', rsp[0])
+        socketServer.emit('update', rsp)
       } else {
         console.log('Error in query.', err)
       }
