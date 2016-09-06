@@ -21,7 +21,7 @@ mongoose.connect('mongodb://127.0.0.1/cereals', {
   }
 })
 
-const PAST_HOURS = 24
+const PAST_HOURS = 3
 const OLDEST_POST = moment().subtract(PAST_HOURS, 'hours').toDate()
 
 Cereal.aggregate(

@@ -41,7 +41,7 @@ socketServer.on('connection', (socket) => {
 })
 
 function emitUpdate () {
-  const PAST_HOURS = 24
+  const PAST_HOURS = 3
   const OLDEST_POST = moment().subtract(PAST_HOURS, 'hours').toDate()
 
   Cereal.aggregate(
