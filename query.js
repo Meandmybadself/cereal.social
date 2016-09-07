@@ -30,8 +30,8 @@ Cereal.aggregate(
   }},
   {$unwind: '$cereal'},
   {$group: {
-    _id: '$cereal',
-    count: {$sum:1}
+      _id: '$cereal',
+      count: {$sum: 1}
   }},
   {$sort: {'count': -1}}
 )

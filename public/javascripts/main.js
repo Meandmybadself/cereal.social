@@ -8,23 +8,26 @@ var socket
 var cereals
 var hasInit
 
-var SCALE = 0.25
+var SCALE = 0.9
 var BOX_WIDTH = 14 * SCALE
 var BOX_HEIGHT = 18 * SCALE
 var BOX_DEPTH = 3 * SCALE
 
-var GAP = 3
+var GAP = .5
 
 var TABLE_HEIGHT = 3
 
 var order = [
-  [37, 36, 35, 34, 33, 32, 31],
-  [38, 17, 16, 15, 14, 13, 30],
-  [39, 18, 5, 4, 3, 12, 29],
-  [40, 19, 6, 1, 2, 11, 28],
-  [41, 20, 7, 8, 9, 10, 27],
-  [42, 21, 22, 23, 24, 25, 26],
-  [43, 44, 45, 46, 47, 48, 49]
+  [100, 99, 98, 97, 96, 95, 94, 93, 92, 91],
+  [65, 64, 63, 62, 61, 60, 59, 58, 57, 90],
+  [66, 37, 36, 35, 34, 33, 32, 31, 56, 89],
+  [67, 38, 17, 16, 15, 14, 13, 30, 55, 88],
+  [68, 39, 18, 5, 4, 3, 12, 29, 54, 87],
+  [69, 40, 19, 6, 1, 2, 11, 28, 53, 86],
+  [70, 41, 20, 7, 8, 9, 10, 27, 52, 85],
+  [71, 42, 21, 22, 23, 24, 25, 26, 51, 84],
+  [72, 43, 44, 45, 46, 47, 48, 49, 50, 83],
+  [73, 74, 75, 76, 77, 78, 79, 80, 81, 82]
 ]
 
 var cerealColors = {
@@ -46,21 +49,21 @@ var cerealColors = {
   'waffle-crisp': {color: 0xD7A900},
   'boo-berry': {color: 0x0068A5},
   'honey-smacks': {color: 0xD2272A},
-  'corn-pops': {color: 0xFF0000},
+  'corn-pops': {color: 0xFEF100},
   'golden-grahams': {color: 0xFFFC41},
   'cocoa-pebbles': {color: 0x4B221F},
   'count-chocula': {color: 0x3D1F16},
   'reeses-puffs': {color: 0xFB781D},
   'cookie-crisp': {color: 0xFFFFFF},
-  'capn-crunch': {color: 0xFF0000},
+  'capn-crunch': {color: 0xFF382A},
   'honey-nut-cheerios': {color: 0xFCC930},
   'krave': {color: 0xFFFFFF},
   'raisin-bran': {color: 0xAF1F91},
-  'wheaties': {color: 0xFF0000},
-  'apple-jacks': {color: 0xFF0000},
-  'froot-loops': {color: 0xFF0000},
+  'wheaties': {color: 0xE33600},
+  'apple-jacks': {color: 0x00CB31},
+  'froot-loops': {color: 0xF32016},
   'special-k': {color: 0xFFFFFF},
-  'rice-krispies': {color: 0xFF0000},
+  'rice-krispies': {color: 0x00A0D3},
   'kix': {color: 0xF4782F},
   'berry-berry-kix': {color: 0x7C1A82},
   'frosted-flakes': {color: 0x0563B3},
@@ -72,11 +75,11 @@ var cerealColors = {
   'cocoa-puffs': {color: 0x441413}
 }
 
-function rad2deg(radians) {
-  return radians * (180/Math.PI)
+function rad2deg (radians) {
+  return radians * (180 / Math.PI)
 }
-function deg2rad(degrees) {
-  return degrees * (Math.PI/180)
+function deg2rad (degrees) {
+  return degrees * (Math.PI / 180)
 }
 
 function getPosition (index) {
@@ -90,34 +93,35 @@ function getPosition (index) {
     for (var col = 0; col < order[row].length; col++) {
       if (order[row][col] === index) {
         var x = -(startX / 2) + (BOX_WIDTH * col) + (GAP * col)
-        var y = 0
+        var y = (BOX_DEPTH * 0.5) + (TABLE_HEIGHT * 0.5)
         var z = -(startY / 2) + (BOX_HEIGHT * row) + (GAP * row)
-        //console.log(index,x,y,z)
+        // console.log(index,x,y,z)
         return new THREE.Vector3(x, y, z)
       }
     }
   }
-  console.log(index)
 }
-
-
 
 function getBox (id) {
   var textureLoader = new THREE.TextureLoader()
   var texPath = '/assets/images/textures/cereals/' + id + '.jpg'
-  var box = new THREE.BoxBufferGeometry(BOX_WIDTH, BOX_HEIGHT, BOX_DEPTH)
+  var box = new THREE.BoxBufferGeometry(BOX_WIDTH, BOX_HEIGHT, BOX_DEPTH, 1, 1, 1)
   var color = cerealColors[id].color
-
+  var shininess = 10
+  var flatMat = new THREE.MeshLambertMaterial({color:color})
+  //var flatMat = new THREE.MeshPhongMaterial({ color: color, specular: color, shininess: shininess, shading: THREE.FlatShading })
   var mat = new THREE.MultiMaterial([
-    new THREE.MeshPhongMaterial( { color: color, specular: color, shininess: 30, shading: THREE.FlatShading } ),
-    new THREE.MeshPhongMaterial( { color: color, specular: color, shininess: 30, shading: THREE.FlatShading } ),
-    new THREE.MeshPhongMaterial( { color: color, specular: color, shininess: 30, shading: THREE.FlatShading } ),
-    new THREE.MeshPhongMaterial( { color: color, specular: color, shininess: 30, shading: THREE.FlatShading } ),
-    new THREE.MeshPhongMaterial( { color: color, specular: color, shininess: 30, shading: THREE.FlatShading } ),
+    flatMat,
+    flatMat,
+    flatMat,
+    flatMat,
+    flatMat,
     new THREE.MeshBasicMaterial({map: textureLoader.load(texPath)}),
-    new THREE.MeshPhongMaterial( { color: color, specular: color, shininess: 30, shading: THREE.FlatShading } )
+    flatMat
   ])
   var mesh = new THREE.Mesh(box, mat)
+  mesh.castShadow = true
+
   mesh.rotation.x = deg2rad(90)
   return mesh
 }
@@ -129,25 +133,59 @@ $(function () {
   connectToSocket()
 })
 
-function randomBetween(min,max) {
+function randomBetween (min, max) {
   var delta = max - min
   return Math.floor(Math.random() * delta) + min
 }
 
-function addBoxes (id, count) {
-  // console.log('addBoxes',id,count)
-  var container = cereals[id].container
-  var kids = container.children
-  var kidsLen = kids.length
+function getShortestColumn (id) {
+  // console.log('gsc',id)
+  var fewestColumns = 9999
+  var shortestCol
+  var cols = cereals[id].columns
+  var colsLen = cols.length
+  // console.log(cols,colsLen)
 
+  while(colsLen--) {
+    var kids = cols[colsLen].children
+    var kidsLen = kids.length
+    if (kidsLen < fewestColumns) {
+      shortestCol = cols[colsLen]
+      fewestColumns = kidsLen
+    }
+  }
+  return shortestCol
+}
+
+function getTallestColumn (id) {
+  var mostCol = 0
+  var shortestCol
+  var cols = cereals[id].columns
+  var colsLen = cols.length
+
+  while(colsLen--) {
+    var kids = cols[colsLen].children
+    var kidsLen = kids.length
+    if (kidsLen > mostCol) {
+      shortestCol = cols[colsLen]
+      mostCol = kidsLen
+    }
+  }
+  return mostCol
+}
+
+function addBoxes (id, count) {
   var mesh = getBox(id)
 
   for (var i = 0; i < count; i++) {
     var m = mesh.clone()
+    var col = getShortestColumn(id)
+    var kidsLen = col.children.length
     m.position.y = kidsLen * BOX_DEPTH
-    m.rotation.z = deg2rad(randomBetween(-5,5))
-    container.add(m)
-    kidsLen++
+    m.rotation.z = deg2rad(randomBetween(-5, 5))
+    col.add(m)
+    TweenMax.from(m.position, 0.3, {y: 200,ease: Quad.easeOut})
+    TweenMax.from(m.rotation, 0.3, {x: deg2rad(10),ease: Quad.easeOut})
   }
 }
 function removeBoxes (id, count) {
@@ -165,18 +203,48 @@ function connectToSocket () {
     var ll
 
     if (!hasInit) {
-      // Init old cereals for the first time if it doesn't exist.
+      // Build the columns.
+      var index = 0
+
       cereals = {}
       ll = data.length
-      while(ll--) {
-        var c = data[ll]
-        var do3d = new THREE.Object3D()
-        var p = getPosition(ll)
-        do3d.position.x = p.x
-        do3d.position.y = p.y + (BOX_DEPTH * 0.5) + (TABLE_HEIGHT * 0.5)
-        do3d.position.z = p.z
-        scene.add(do3d)
-        cereals[c['_id']] = {container: do3d, count: 0}
+
+      // while(ll--) {
+      for (var d = 0; d < ll; d++) {
+        var c = data[d]
+        var ct = c.count
+        var colCt
+        var cols = []
+
+        if (ct >= 1000) {
+          colCt = 8
+        } else if (ct >= 800) {
+          colCt = 7
+        } else if (ct >= 600) {
+          colCt = 6
+        } else if (ct >= 400) {
+          colCt = 5
+        } else if (ct >= 200) {
+          colCt = 4
+        } else if (ct >= 100) {
+          colCt = 3
+        } else if (ct >= 50) {
+          colCt = 2
+        } else if (ct >= 20) {
+          colCt = 1
+        }
+
+        for (var i = 0; i < colCt; i++) {
+          var do3d = new THREE.Object3D()
+          var p = getPosition(index++)
+          do3d.position.x = p.x
+          do3d.position.y = p.y
+          do3d.position.z = p.z
+          cols.push(do3d)
+          world.add(do3d)
+        }
+
+        cereals[c['_id']] = {columns: cols, count: 0}
       }
       hasInit = true
     }
@@ -184,7 +252,6 @@ function connectToSocket () {
     ll = data.length
     while(ll--) {
       var id = data[ll]['_id']
-    //  console.log(id)
       var diff = data[ll].count - cereals[id].count
       cereals[id].count = data[ll].count
       if (diff > 0) {
@@ -192,30 +259,16 @@ function connectToSocket () {
       } else if (diff < 0) {
         removeBoxes(id, diff)
       }
-    // console.log(ll,diff)
     }
-
-    // Go through & run diff from old data to new data, creating / killing.
-
-  // if (!oldCereals) {
-  //   oldCereals = {}
-  //
-  //   for(var c in data) {
-  //     oldCereals
-  //   }
-  //
-  // } else {
-  //   // Go through & find differences for each of their value.
-  //
-  // }
   })
 }
 
 function setup3d () {
   scene = new THREE.Scene()
   camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 12000)
-  camera.position.z = 200
-  camera.position.y = 140
+  camera.position.z = 300
+  camera.position.y = 280
+  camera.rotation.x = deg2rad(-35)
   world = new THREE.Object3D()
 
   scene.add(world)
@@ -223,10 +276,12 @@ function setup3d () {
   renderer = new THREE.WebGLRenderer({
     antialias: true
   })
-  renderer.setClearColor(0x779194)
+  // renderer.shadowMapEnabled = true
+  //renderer.setClearColor(0x779194)
+  renderer.setClearColor(0x111111)
   renderer.setSize(window.innerWidth, window.innerHeight)
 
-  var orbit = new THREE.OrbitControls(camera, renderer.domElement)
+  // var orbit = new THREE.OrbitControls(camera, renderer.domElement)
   // orbit.enableZoom = false
 
   document.body.appendChild(renderer.domElement)
@@ -250,6 +305,9 @@ function onResize () {
 }
 
 function frameUpdate () {
+  var r = rad2deg(world.rotation.y) + 0.3
+
+  world.rotation.y = deg2rad(r)
 }
 
 function buildWorld () {
@@ -258,26 +316,32 @@ function buildWorld () {
 }
 
 function setupLights () {
-  var ambientLight = new THREE.AmbientLight(0x000000)
-  scene.add(ambientLight)
+  var ambientLight = new THREE.AmbientLight(0x333333)
+  world.add(ambientLight)
 
   var lights = []
-  lights[ 0 ] = new THREE.PointLight(0xffffff, 1, 0)
-  lights[ 1 ] = new THREE.PointLight(0xffffff, 1, 0)
-  lights[ 2 ] = new THREE.PointLight(0xffffff, 1, 0)
+  lights[ 0 ] = new THREE.PointLight(0xFFFFFF, 1, 0)
+  lights[ 1 ] = new THREE.PointLight(0xFFFFFF, 1, 0)
+  lights[ 2 ] = new THREE.PointLight(0xFFFFFF, 1, 0)
 
   lights[ 0 ].position.set(0, 200, 0)
   lights[ 1 ].position.set(100, 200, 100)
   lights[ 2 ].position.set(- 100, - 200, - 100)
 
-  scene.add(lights[ 0 ])
-  scene.add(lights[ 1 ])
-  scene.add(lights[ 2 ])
+  lights[0].castShadow = false
+  lights[1].castShadow = false
+  lights[1].shadowDarkness = 0.1
+  lights[2].castShadow = false
+
+  world.add(lights[ 0 ])
+  world.add(lights[ 1 ])
+  world.add(lights[ 2 ])
 }
 
 function createTable () {
-  var geometry = new THREE.CylinderBufferGeometry(80, 79, 3, 60)
+  var geometry = new THREE.CylinderBufferGeometry(85, 84, 3, 60)
   var material = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexture('assets/images/textures/table.jpg') })
   table = new THREE.Mesh(geometry, material)
-  scene.add(table)
+  table.receiveShadow = true
+  world.add(table)
 }

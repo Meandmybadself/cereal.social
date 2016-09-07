@@ -44,6 +44,8 @@ function emitUpdate () {
   const PAST_HOURS = 3
   const OLDEST_POST = moment().subtract(PAST_HOURS, 'hours').toDate()
 
+
+
   Cereal.aggregate(
     {$match: {
         date: {$gt: OLDEST_POST}
