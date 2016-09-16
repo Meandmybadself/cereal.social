@@ -7,6 +7,8 @@ var io
 var socket
 var cereals
 var hasInit
+var domEvents
+var useShadows = false
 
 var SCALE = 0.9
 var BOX_WIDTH = 14 * SCALE
@@ -108,8 +110,8 @@ function getBox (id) {
   var box = new THREE.BoxBufferGeometry(BOX_WIDTH, BOX_HEIGHT, BOX_DEPTH, 1, 1, 1)
   var color = cerealColors[id].color
   var shininess = 10
-  var flatMat = new THREE.MeshLambertMaterial({color:color})
-  //var flatMat = new THREE.MeshPhongMaterial({ color: color, specular: color, shininess: shininess, shading: THREE.FlatShading })
+  var flatMat = new THREE.MeshLambertMaterial({color: color})
+  // var flatMat = new THREE.MeshPhongMaterial({ color: color, specular: color, shininess: shininess, shading: THREE.FlatShading })
   var mat = new THREE.MultiMaterial([
     flatMat,
     flatMat,
@@ -120,9 +122,9 @@ function getBox (id) {
     flatMat
   ])
   var mesh = new THREE.Mesh(box, mat)
-  mesh.castShadow = true
-
+  mesh.castShadow = useShadows
   mesh.rotation.x = deg2rad(90)
+
   return mesh
 }
 
@@ -174,11 +176,17 @@ function getTallestColumn (id) {
   return mostCol
 }
 
+function onBoxMouseover(e) {}
+function onBoxMouseout(e) {}
+
 function addBoxes (id, count) {
   var mesh = getBox(id)
 
   for (var i = 0; i < count; i++) {
     var m = mesh.clone()
+    domEvents.addEventListener(m, 'mouseover', function(e) {
+      console.log('mouseover', e)
+    })
     var col = getShortestColumn(id)
     var kidsLen = col.children.length
     m.position.y = kidsLen * BOX_DEPTH
@@ -216,20 +224,22 @@ function connectToSocket () {
         var colCt
         var cols = []
 
-        if (ct >= 1000) {
-          colCt = 8
-        } else if (ct >= 800) {
-          colCt = 7
+        if (ct >= 700) {
+          colCt = 11
         } else if (ct >= 600) {
-          colCt = 6
+          colCt = 10
+        } else if (ct >= 500) {
+          colCt = 9
         } else if (ct >= 400) {
-          colCt = 5
+          colCt = 8
+        } else if (ct >= 300) {
+          colCt = 7
         } else if (ct >= 200) {
-          colCt = 4
+          colCt = 6
         } else if (ct >= 100) {
-          colCt = 3
+          colCt = 4
         } else if (ct >= 50) {
-          colCt = 2
+          colCt = 3
         } else if (ct >= 20) {
           colCt = 1
         }
@@ -266,9 +276,9 @@ function connectToSocket () {
 function setup3d () {
   scene = new THREE.Scene()
   camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 12000)
-  camera.position.z = 300
+  camera.position.z = 260
   camera.position.y = 280
-  camera.rotation.x = deg2rad(-35)
+  camera.rotation.x = deg2rad(-43)
   world = new THREE.Object3D()
 
   scene.add(world)
@@ -276,13 +286,29 @@ function setup3d () {
   renderer = new THREE.WebGLRenderer({
     antialias: true
   })
-  // renderer.shadowMapEnabled = true
-  //renderer.setClearColor(0x779194)
+  renderer.shadowMapEnabled = useShadows
+  // renderer.setClearColor(0x779194)
   renderer.setClearColor(0x111111)
   renderer.setSize(window.innerWidth, window.innerHeight)
+  //
+  // var width = window.innerWidth || 2;
+	// var height = window.innerHeight || 2;
+  // var rtWidth  = width / 2;
+	// var rtHeight = height / 2;
+  // var effectHBlur = new THREE.ShaderPass(THREE.HorizontalBlurShader)
+  // var effectVBlur = new THREE.ShaderPass(THREE.VerticalBlurShader)
+  // effectHBlur.uniforms[ 'h' ].value = 2 / (width / 2)
+  // effectVBlur.uniforms[ 'v' ].value = 2 / (height / 2)
+  //
+  // composerScene = new THREE.EffectComposer(renderer, new THREE.WebGLRenderTarget(rtWidth * 2, rtHeight * 2, rtParameters))
+  // composerScene.addPass(effectHBlur)
+  // composerScene.addPass(effectVBlur)
 
-  // var orbit = new THREE.OrbitControls(camera, renderer.domElement)
-  // orbit.enableZoom = false
+  //var orbit = new THREE.OrbitControls(camera, renderer.domElement)
+  //orbit.enableZoom = false
+
+  domEvents	= new THREEx.DomEvents(camera, renderer.domElement)
+
 
   document.body.appendChild(renderer.domElement)
   $(window).resize(onResize)
@@ -312,36 +338,55 @@ function frameUpdate () {
 
 function buildWorld () {
   setupLights()
-  createTable()
+  loadWorld()
+  //createTable()
 }
 
 function setupLights () {
   var ambientLight = new THREE.AmbientLight(0x333333)
-  world.add(ambientLight)
+  //world.add(ambientLight)
 
   var lights = []
-  lights[ 0 ] = new THREE.PointLight(0xFFFFFF, 1, 0)
-  lights[ 1 ] = new THREE.PointLight(0xFFFFFF, 1, 0)
-  lights[ 2 ] = new THREE.PointLight(0xFFFFFF, 1, 0)
-
+  lights[ 0 ] = new THREE.PointLight(0xFFFFFF, .5, 0)
+  lights[ 1 ] = new THREE.PointLight(0xFFFFFF, .5, 0)
+  lights[ 2 ] = new THREE.PointLight(0xFFFFFF, .5, 0)
   lights[ 0 ].position.set(0, 200, 0)
   lights[ 1 ].position.set(100, 200, 100)
-  lights[ 2 ].position.set(- 100, - 200, - 100)
+  lights[ 2 ].position.set(-100, -200, -100)
 
-  lights[0].castShadow = false
-  lights[1].castShadow = false
-  lights[1].shadowDarkness = 0.1
-  lights[2].castShadow = false
+  lights[0].castShadow = useShadows
+  lights[1].castShadow = useShadows
+  lights[2].castShadow = useShadows
 
   world.add(lights[ 0 ])
   world.add(lights[ 1 ])
   world.add(lights[ 2 ])
+
+  hemiLight = new THREE.HemisphereLight( 0xCCCCCC, 0x999999, .5 );
+  hemiLight.castShadow = useShadows
+  world.add(hemiLight)
 }
 
-function createTable () {
-  var geometry = new THREE.CylinderBufferGeometry(85, 84, 3, 60)
-  var material = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexture('assets/images/textures/table.jpg') })
-  table = new THREE.Mesh(geometry, material)
-  table.receiveShadow = true
-  world.add(table)
+function loadWorld() {
+  $.ajax({
+    //dataType:'json',
+    url:'/assets/geometry/scene.json',
+    success: function(js,stat) {
+      if (stat === "success") {
+        var loader = new THREE.ObjectLoader()
+        var obj = loader.parse(js)
+        obj.scale.x =
+        obj.scale.y =
+        obj.scale.z = 35
+        obj.castShadow = useShadows
+        world.add(obj)
+
+        // Skin em.
+        var table = scene.getObjectByName("Tabletop")
+        console.log(table)
+
+      }
+    }
+  })
+
 }
