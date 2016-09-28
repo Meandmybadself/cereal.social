@@ -44,8 +44,6 @@ function emitUpdate () {
   const PAST_HOURS = 3
   const OLDEST_POST = moment().subtract(PAST_HOURS, 'hours').toDate()
 
-
-
   Cereal.aggregate(
     {$match: {
         date: {$gt: OLDEST_POST}
@@ -59,7 +57,14 @@ function emitUpdate () {
   )
     .exec((err, rsp) => {
       if (!err) {
-        socketServer.emit('update', rsp)
+
+        //run through & total the results.
+        let total = 0;
+        for(let i in rsp) {
+          total += rsp[i].count
+        }
+
+        socketServer.emit('update', {rsp:rsp, total:total})
       } else {
         console.log('Error in query.', err)
       }

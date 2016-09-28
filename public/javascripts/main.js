@@ -9,6 +9,7 @@ var cereals
 var hasInit
 var domEvents
 var useShadows = false
+var boxTotal = 0
 
 var SCALE = 0.9
 var BOX_WIDTH = 14 * SCALE
@@ -33,48 +34,48 @@ var order = [
 ]
 
 var cerealColors = {
-  'corn-chex': {color: 0x2B7E38},
-  'multi-grain-cheerios': {color: 0xFF0000},
-  'alpha-bits': {color: 0x0F4DA3},
-  'cinnamon-chex': {color: 0xB51017},
-  'mini-wheats': {color: 0xFA974A},
-  'wheat-chex': {color: 0xFF0000},
-  'grape-nuts': {color: 0xFFFFFF},
-  'rice-chex': {color: 0x0095C8},
-  'apple-cinnamon-cheerios': {color: 0x66A52F},
-  'golden-crisp': {color: 0xCE8826},
-  'all-bran': {color: 0xE36B03},
-  'smorz': {color: 0x00A9CF},
-  'crispix': {color: 0x044A83},
-  'cinnamon-life': {color: 0x51A9DF},
-  'chocolate-cheerios': {color: 0x391D18},
-  'waffle-crisp': {color: 0xD7A900},
-  'boo-berry': {color: 0x0068A5},
-  'honey-smacks': {color: 0xD2272A},
-  'corn-pops': {color: 0xFEF100},
-  'golden-grahams': {color: 0xFFFC41},
-  'cocoa-pebbles': {color: 0x4B221F},
-  'count-chocula': {color: 0x3D1F16},
-  'reeses-puffs': {color: 0xFB781D},
-  'cookie-crisp': {color: 0xFFFFFF},
-  'capn-crunch': {color: 0xFF382A},
-  'honey-nut-cheerios': {color: 0xFCC930},
-  'krave': {color: 0xFFFFFF},
-  'raisin-bran': {color: 0xAF1F91},
-  'wheaties': {color: 0xE33600},
-  'apple-jacks': {color: 0x00CB31},
-  'froot-loops': {color: 0xF32016},
-  'special-k': {color: 0xFFFFFF},
-  'rice-krispies': {color: 0x00A0D3},
-  'kix': {color: 0xF4782F},
-  'berry-berry-kix': {color: 0x7C1A82},
-  'frosted-flakes': {color: 0x0563B3},
-  'lucky-charms': {color: 0xEF2029},
-  'frosted-cheerios': {color: 0x0070B8},
-  'cheerios': {color: 0xFCCC03},
-  'cinnamon-toast-crunch': {color: 0xFFFFFF},
-  'fruity-pebbles': {color: 0xFF0000},
-  'cocoa-puffs': {color: 0x441413}
+  'corn-chex': {color: 0x2B7E38, label: 'Corn Chex'},
+  'multi-grain-cheerios': {color: 0xFF0000, label: 'Multi-Grain Cheerios'},
+  'alpha-bits': {color: 0x0F4DA3, label: 'Alpha-Bits'},
+  'cinnamon-chex': {color: 0xB51017, label: 'Cinnamon Chex'},
+  'mini-wheats': {color: 0xFA974A, label: 'Mini-Wheats'},
+  'wheat-chex': {color: 0xFF0000, label: 'Wheat Chex'},
+  'grape-nuts': {color: 0xFFFFFF, label: 'Grape Nuts'},
+  'rice-chex': {color: 0x0095C8, label: 'Rice Chex'},
+  'apple-cinnamon-cheerios': {color: 0x66A52F, label: 'Apple Cinnamon Cheerios'},
+  'golden-crisp': {color: 0xCE8826, label: 'Golden Crisp'},
+  'all-bran': {color: 0xE36B03, label: 'All-Bran'},
+  'smorz': {color: 0x00A9CF, label: 'Smorz'},
+  'crispix': {color: 0x044A83, label: 'Crispix'},
+  'cinnamon-life': {color: 0x51A9DF, label: 'Cinnamon Life'},
+  'chocolate-cheerios': {color: 0x391D18, label: 'Chocolate Cheerios'},
+  'waffle-crisp': {color: 0xD7A900, label: 'Waffle Crisp'},
+  'boo-berry': {color: 0x0068A5, label: 'Boo Berry'},
+  'honey-smacks': {color: 0xD2272A, label: 'Honey Smacks'},
+  'corn-pops': {color: 0xFEF100, label: 'Corn Pops'},
+  'golden-grahams': {color: 0xFFFC41, label: 'Golden Grahams'},
+  'cocoa-pebbles': {color: 0x4B221F, label: 'Cocoa Pebbles'},
+  'count-chocula': {color: 0x3D1F16, label: 'Count Chocula'},
+  'reeses-puffs': {color: 0xFB781D, label: 'Reeses Puffs'},
+  'cookie-crisp': {color: 0xFFFFFF, label: 'Cookie Crisp'},
+  'capn-crunch': {color: 0xFF382A, label: 'Capn Crunch'},
+  'honey-nut-cheerios': {color: 0xFCC930, label: 'Honey Nut Cheerios'},
+  'krave': {color: 0xFFFFFF, label: 'Krave'},
+  'raisin-bran': {color: 0xAF1F91, label: 'Raisin Bran'},
+  'wheaties': {color: 0xE33600, label: 'Wheaties'},
+  'apple-jacks': {color: 0x00CB31, label: 'Apple Jacks'},
+  'froot-loops': {color: 0xF32016, label: 'Froot Loops'},
+  'special-k': {color: 0xFFFFFF, label: 'Special K'},
+  'rice-krispies': {color: 0x00A0D3, label: 'Rice Krispies'},
+  'kix': {color: 0xF4782F, label: 'Kix'},
+  'berry-berry-kix': {color: 0x7C1A82, label: 'Berry Berry Kix'},
+  'frosted-flakes': {color: 0x0563B3, label: 'Frosted Flakes'},
+  'lucky-charms': {color: 0xEF2029, label: 'Lucky Charms'},
+  'frosted-cheerios': {color: 0x0070B8, label: 'Frosted Cheerios'},
+  'cheerios': {color: 0xFCCC03, label: 'Cheerios'},
+  'cinnamon-toast-crunch': {color: 0xFFFFFF, label: 'Cinnamon Toast Crunch'},
+  'fruity-pebbles': {color: 0xFF0000, label: 'Fruity Pebbles'},
+  'cocoa-puffs': {color: 0x441413, label: 'Cocoa Puffs'}
 }
 
 function rad2deg (radians) {
@@ -185,9 +186,9 @@ function addBoxes (id, count) {
 
   for (var i = 0; i < count; i++) {
     var m = mesh.clone()
-    domEvents.addEventListener(m, 'click', function (e) {
-      console.log('click', e)
-    })
+    // domEvents.addEventListener(m, 'click', function (e) {
+    //   console.log('click', e)
+    // })
     var col = getShortestColumn(id)
     var kidsLen = col.children.length
     m.position.y = kidsLen * BOX_DEPTH
@@ -197,30 +198,42 @@ function addBoxes (id, count) {
     TweenMax.from(m.rotation, 0.3, {x: deg2rad(10),ease: Quad.easeOut})
   }
 }
-function removeBoxes (id, count) {
+
+function removeBoxes (id, count, totalNum) {
   console.log('removeBoxes', id, count)
 }
 
+function updateTable (id, count) {
+  let li = $('li[data-id="' + id + '"]')
+  li.find('span.value').text(count)
+  li.find('span.per').text(Math.floor((count / boxTotal) * 100) + '%')
+}
+
 function connectToSocket () {
-  socket = io.connect()
+  if (document.location.hostname.indexOf('local') > -1) {
+    socket = io.connect(document.location.hostname + ':2052')
+  } else {
+    socket = io.connect()
+  }
+
   socket.on('connect', function () {
     console.log('connected')
   })
   socket.on('update', function (data) {
-    // console.log('update', data)
+    console.log('update', data)
 
     var ll
+    boxTotal = data.total
 
     if (!hasInit) {
       // Build the columns.
       var index = 0
 
       cereals = {}
-      ll = data.length
+      ll = data.rsp.length
 
-      // while(ll--) {
       for (var d = 0; d < ll; d++) {
-        var c = data[d]
+        var c = data.rsp[d]
         var ct = c.count
         var colCt = 1
         var cols = []
@@ -256,15 +269,25 @@ function connectToSocket () {
         }
 
         cereals[c['_id']] = {columns: cols, count: 0}
+
+        var label = cerealColors[c['_id']].label
+        var per = Math.floor((ct / boxTotal) * 100)
+        var li = $('<li data-id="' + c['_id'] + '"><span class="title">' + label + '</span><span class="value">' + ct + '</span><span class="per">' + per + '%</span></li>')
+        $('#leaderboard ul').append(li)
       }
       hasInit = true
     }
 
-    ll = data.length
+    ll = data.rsp.length
+
     while(ll--) {
-      var id = data[ll]['_id']
-      var diff = data[ll].count - cereals[id].count
-      cereals[id].count = data[ll].count
+      var id = data.rsp[ll]['_id']
+
+      var diff = data.rsp[ll].count - cereals[id].count
+      cereals[id].count = data.rsp[ll].count
+
+      updateTable(id, data.rsp[ll].count)
+
       if (diff > 0) {
         addBoxes(id, diff)
       } else if (diff < 0) {
@@ -412,6 +435,8 @@ function loadWorld () {
       'door-2-door',
       'door-1-door',
       'Upper-cabinet-3',
+      'Upper-Cabinet-2-Door',
+      'Upper-Cabinet-3-Door',
       'Shelf'
 
     ]
@@ -447,6 +472,8 @@ function loadWorld () {
       'Lower-Cabinet-base-1',
       'Upper-cabinet-1-base',
       'Upper-cabinet-0-base',
+      'Upper-Cabinet-3-Base',
+      'Upper-Cabinet-2-Base',
       'Lower-Cabinet-1-Base',
       'In-between-cabinet-shelf-1',
       'In-between-cabinet-shelf-2',
@@ -472,7 +499,9 @@ function loadWorld () {
       'Drawer-6-knob',
       'Drawer-7-knob',
       'Drawer-8-knob',
-      'Drawer-9-knob'
+      'Drawer-9-knob',
+      'Upper-Cabinet-2-Knob',
+      'Upper-Cabinet-3-Knob'
     ]
     setGroupMaterial(dae, knobs, 0x18191b)
 

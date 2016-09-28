@@ -11,4 +11,50 @@ html,body {
     width:100%;
     height:100%;
   }
+
+  #leaderboard {
+    $w:250px;
+    $h:625px;
+    padding:5px;
+    position: absolute;
+    right:30px;
+    top:50%;
+    margin-top:-$h/2;
+    z-index:2;
+    background: white;
+    width:$w;
+    height:$h;
+    h1 {
+      margin:0;
+      font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+      font-weight: 800;
+    }
+    ul {
+      list-style: none;
+      padding:0;
+      li {
+        padding:0;
+        margin:0;
+        border-bottom:1px solid #999;
+        span {
+          font-family: "HelveticaNeue", "Helvetica Neue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+          font-weight: 400;
+          font-size:.85em;
+        }
+        span.title, span.per {
+          font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+          font-weight: 800;
+        }
+        span.value {
+          margin-left:5px;
+          font-size:.7em;
+        }
+        span.per {
+          float:right;
+          font-size:.7em;
+        }
+
+      }
+    }
+  }
 }

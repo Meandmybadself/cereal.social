@@ -9,3 +9,37 @@ html, body {
   html canvas#world, body canvas#world {
     width: 100%;
     height: 100%; }
+  html #leaderboard, body #leaderboard {
+    padding: 5px;
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    margin-top: -312.5px;
+    z-index: 2;
+    background: white;
+    width: 250px;
+    height: 625px; }
+    html #leaderboard h1, body #leaderboard h1 {
+      margin: 0;
+      font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+      font-weight: 800; }
+    html #leaderboard ul, body #leaderboard ul {
+      list-style: none;
+      padding: 0; }
+      html #leaderboard ul li, body #leaderboard ul li {
+        padding: 0;
+        margin: 0;
+        border-bottom: 1px solid #999; }
+        html #leaderboard ul li span, body #leaderboard ul li span {
+          font-family: "HelveticaNeue", "Helvetica Neue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+          font-weight: 400;
+          font-size: .85em; }
+        html #leaderboard ul li span.title, html #leaderboard ul li span.per, body #leaderboard ul li span.title, body #leaderboard ul li span.per {
+          font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+          font-weight: 800; }
+        html #leaderboard ul li span.value, body #leaderboard ul li span.value {
+          margin-left: 5px;
+          font-size: .7em; }
+        html #leaderboard ul li span.per, body #leaderboard ul li span.per {
+          float: right;
+          font-size: .7em; }
