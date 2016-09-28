@@ -118,6 +118,7 @@ function getBox (id) {
     flatMat,
     flatMat,
     flatMat,
+    // flatMat,
     new THREE.MeshBasicMaterial({map: textureLoader.load(texPath)}),
     flatMat
   ])
@@ -176,21 +177,21 @@ function getTallestColumn (id) {
   return mostCol
 }
 
-function onBoxMouseover(e) {}
-function onBoxMouseout(e) {}
+function onBoxMouseover (e) {}
+function onBoxMouseout (e) {}
 
 function addBoxes (id, count) {
   var mesh = getBox(id)
 
   for (var i = 0; i < count; i++) {
     var m = mesh.clone()
-    domEvents.addEventListener(m, 'mouseover', function(e) {
-      console.log('mouseover', e)
+    domEvents.addEventListener(m, 'click', function (e) {
+      console.log('click', e)
     })
     var col = getShortestColumn(id)
     var kidsLen = col.children.length
     m.position.y = kidsLen * BOX_DEPTH
-    m.rotation.z = deg2rad(randomBetween(-5, 5))
+    m.rotation.z = deg2rad(randomBetween(-8, 8))
     col.add(m)
     TweenMax.from(m.position, 0.3, {y: 200,ease: Quad.easeOut})
     TweenMax.from(m.rotation, 0.3, {x: deg2rad(10),ease: Quad.easeOut})
@@ -206,7 +207,7 @@ function connectToSocket () {
     console.log('connected')
   })
   socket.on('update', function (data) {
-    console.log('update', data)
+    // console.log('update', data)
 
     var ll
 
@@ -221,7 +222,7 @@ function connectToSocket () {
       for (var d = 0; d < ll; d++) {
         var c = data[d]
         var ct = c.count
-        var colCt
+        var colCt = 1
         var cols = []
 
         if (ct >= 700) {
@@ -238,7 +239,7 @@ function connectToSocket () {
           colCt = 6
         } else if (ct >= 100) {
           colCt = 4
-        } else if (ct >= 50) {
+        } else if (ct >= 40) {
           colCt = 3
         } else if (ct >= 20) {
           colCt = 1
@@ -276,7 +277,7 @@ function connectToSocket () {
 function setup3d () {
   scene = new THREE.Scene()
   camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 12000)
-  camera.position.z = 260
+  camera.position.z = 240
   camera.position.y = 280
   camera.rotation.x = deg2rad(-43)
   world = new THREE.Object3D()
@@ -287,28 +288,13 @@ function setup3d () {
     antialias: true
   })
   renderer.shadowMapEnabled = useShadows
-  // renderer.setClearColor(0x779194)
   renderer.setClearColor(0x111111)
   renderer.setSize(window.innerWidth, window.innerHeight)
-  //
-  // var width = window.innerWidth || 2;
-	// var height = window.innerHeight || 2;
-  // var rtWidth  = width / 2;
-	// var rtHeight = height / 2;
-  // var effectHBlur = new THREE.ShaderPass(THREE.HorizontalBlurShader)
-  // var effectVBlur = new THREE.ShaderPass(THREE.VerticalBlurShader)
-  // effectHBlur.uniforms[ 'h' ].value = 2 / (width / 2)
-  // effectVBlur.uniforms[ 'v' ].value = 2 / (height / 2)
-  //
-  // composerScene = new THREE.EffectComposer(renderer, new THREE.WebGLRenderTarget(rtWidth * 2, rtHeight * 2, rtParameters))
-  // composerScene.addPass(effectHBlur)
-  // composerScene.addPass(effectVBlur)
 
-  //var orbit = new THREE.OrbitControls(camera, renderer.domElement)
-  //orbit.enableZoom = false
+  // var orbit = new THREE.OrbitControls(camera, renderer.domElement)
+  // orbit.enableZoom = false
 
-  domEvents	= new THREEx.DomEvents(camera, renderer.domElement)
-
+  domEvents = new THREEx.DomEvents(camera, renderer.domElement)
 
   document.body.appendChild(renderer.domElement)
   $(window).resize(onResize)
@@ -331,7 +317,7 @@ function onResize () {
 }
 
 function frameUpdate () {
-  var r = rad2deg(world.rotation.y) + 0.3
+  var r = rad2deg(world.rotation.y) + 0.4
 
   world.rotation.y = deg2rad(r)
 }
@@ -339,12 +325,12 @@ function frameUpdate () {
 function buildWorld () {
   setupLights()
   loadWorld()
-  //createTable()
+// createTable()
 }
 
 function setupLights () {
   var ambientLight = new THREE.AmbientLight(0x333333)
-  //world.add(ambientLight)
+  world.add(ambientLight)
 
   var lights = []
   lights[ 0 ] = new THREE.PointLight(0xFFFFFF, .5, 0)
@@ -358,35 +344,144 @@ function setupLights () {
   lights[1].castShadow = useShadows
   lights[2].castShadow = useShadows
 
-  world.add(lights[ 0 ])
-  world.add(lights[ 1 ])
-  world.add(lights[ 2 ])
+  scene.add(lights[ 0 ])
+  scene.add(lights[ 1 ])
+  scene.add(lights[ 2 ])
 
-  hemiLight = new THREE.HemisphereLight( 0xCCCCCC, 0x999999, .5 );
-  hemiLight.castShadow = useShadows
-  world.add(hemiLight)
+// hemiLight = new THREE.HemisphereLight( 0xCCCCCC, 0x999999, .5 )
+// hemiLight.castShadow = useShadows
+// world.add(hemiLight)
 }
 
-function loadWorld() {
-  $.ajax({
-    //dataType:'json',
-    url:'/assets/geometry/scene.json',
-    success: function(js,stat) {
-      if (stat === "success") {
-        var loader = new THREE.ObjectLoader()
-        var obj = loader.parse(js)
-        obj.scale.x =
-        obj.scale.y =
-        obj.scale.z = 35
-        obj.castShadow = useShadows
-        world.add(obj)
-
-        // Skin em.
-        var table = scene.getObjectByName("Tabletop")
-        console.log(table)
-
-      }
+function setGroupMaterial (dae, arr, col, isShiny) {
+  var ll = arr.length
+  var mat
+  if (isShiny) {
+    mat = new THREE.MeshLambertMaterial({color: col})
+  } else {
+    mat = new THREE.MeshPhongMaterial({color: col})
+  }
+  while(ll--) {
+    var obj = dae.getObjectByName(arr[ll])
+    if (obj) {
+      obj.children[0].material = mat
+    } else {
+      console.log('couldnt find object named ' + arr[ll])
     }
-  })
+  }
+}
 
+function loadWorld () {
+  var loader = new THREE.ColladaLoader()
+  loader.load('/assets/geometry/scene.dae', function (c) {
+    var dae = c.scene
+    dae.scale.x =
+      dae.scale.y =
+        dae.scale.z = 0.4
+    dae.castShadows = useShadows
+
+    var wallMat = new THREE.MeshLambertMaterial({color: 0x101114})
+
+    for (var i = 1; i < 8; i++) {
+      dae.getObjectByName('Wall-' + i).children[0].material = wallMat
+    }
+
+    var doors = ['Door.1',
+      'Door.2',
+      'Lower-cabinetdoor-3-door',
+      'Lower-cabinetdoor-2-door',
+      'Lower-cabinetdoor-1-door',
+      'Lower-cabinetdoor-3',
+      'Lower-cabinetdoor-2',
+      'Lower-cabinetdoor-1',
+      'Upper-cabinet-1-door',
+      'Upper-cabinet-0-door',
+      'Drawer-3-drawer',
+      'Drawer-2-drawer',
+      'Drawer-1-drawer',
+      'Drawer-4-drawer',
+      'Drawer-5-drawer',
+      'Drawer-6-drawer',
+      'Drawer-7-drawer',
+      'Drawer-8-drawer',
+      'Drawer-9-drawer',
+      'Lower-cabinetdoor-2-door',
+      'Lower-cabinetdoor-1-door',
+      'Lower-cabinetdoor-3-door',
+      'door-3-door',
+      'door-2-door',
+      'door-1-door',
+      'Upper-cabinet-3',
+      'Shelf'
+
+    ]
+
+    setGroupMaterial(dae, doors, 0x232529, true)
+
+    var fridgeParts = [
+      'Top_Door',
+      'Bottom_Door',
+      'Fridge_Base'
+    ]
+    setGroupMaterial(dae, fridgeParts, 0x212627, true)
+
+    var fridgeHandles = [
+      'Top_Handle',
+      'Bottom__Handle'
+
+    ]
+
+    setGroupMaterial(dae, fridgeHandles, 0x333333)
+
+    var counterTops = [
+      'Countertop-0-top',
+      'Lower-Cabinet-1-Countertop'
+    ]
+
+    setGroupMaterial(dae, counterTops, 0x26282c)
+
+    var counterBases = [
+      'Lower-Cabinet-1',
+      'Lower-Cabinet-base-1',
+      'Lower-Cabinet-base-2',
+      'Lower-Cabinet-base-1',
+      'Upper-cabinet-1-base',
+      'Upper-cabinet-0-base',
+      'Lower-Cabinet-1-Base',
+      'In-between-cabinet-shelf-1',
+      'In-between-cabinet-shelf-2',
+      'In-between-cabinet-shelf-3',
+      'In-between-cabinet-shelf-4'
+    ]
+    setGroupMaterial(dae, counterBases, 0x17191c)
+
+    var knobs = [
+      'door-3-knob',
+      'door-2-knob',
+      'door-1-knob',
+      'Drawer-3-knob',
+      'Drawer-2-knob',
+      'Drawer-1-knob',
+      'Lower-cabinetdoor-3-knob',
+      'Lower-cabinetdoor-2-knob',
+      'Lower-cabinetdoor-1-knob',
+      'Upper-cabinet-1-knob',
+      'Upper-cabinet-0-knob',
+      'Drawer-4-knob',
+      'Drawer-5-knob',
+      'Drawer-6-knob',
+      'Drawer-7-knob',
+      'Drawer-8-knob',
+      'Drawer-9-knob'
+    ]
+    setGroupMaterial(dae, knobs, 0x18191b)
+
+    dae.getObjectByName('Tabletop').children[0].material = new THREE.MeshLambertMaterial({color: 0x4e3c37})
+    dae.getObjectByName('Floor').children[0].material = new THREE.MeshLambertMaterial({color: 0x22222A})
+    dae.getObjectByName('Sink').children[0].material = new THREE.MeshLambertMaterial({color: 0x333333})
+    dae.getObjectByName('Recycling').children[0].material = new THREE.MeshLambertMaterial({color: 0x28282f})
+    dae.getObjectByName('Garbage').children[0].material = new THREE.MeshLambertMaterial({color: 0x26282c})
+
+    world.add(dae)
+  })
 }
