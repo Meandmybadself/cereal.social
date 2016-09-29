@@ -12,49 +12,87 @@ html,body {
     height:100%;
   }
 
-  #leaderboard {
-    $w:250px;
-    $h:625px;
-    padding:5px;
+  #gui {
     position: absolute;
-    right:30px;
-    top:50%;
-    margin-top:-$h/2;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
     z-index:2;
-    background: white;
-    width:$w;
-    height:$h;
-    h1 {
-      margin:0;
-      font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-      font-weight: 800;
-    }
-    ul {
-      list-style: none;
-      padding:0;
-      li {
-        padding:0;
-        margin:0;
-        border-bottom:1px solid #999;
-        span {
-          font-family: "HelveticaNeue", "Helvetica Neue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-          font-weight: 400;
-          font-size:.85em;
-        }
-        span.title, span.per {
-          font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-          font-weight: 800;
-        }
-        span.value {
-          margin-left:5px;
-          font-size:.7em;
-        }
-        span.per {
-          float:right;
-          font-size:.7em;
-        }
+    display:flex;
+    //display:none;
+    align-items: center;
+    justify-content: flex-end;
+    #leaderboard {
+      padding:10px;
+      padding-top:5px;
+      padding-bottom:0px;
+      margin-right:20px;
+      $c0:#ffffff;
+      $c1:#e5e5e5;
+      //background: white;
+      /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,e5e5e5+100;White+3D */
+      background: $c0; /* Old browsers */
+      background: -moz-linear-gradient(top,  $c0 0%, $c1 100%); /* FF3.6-15 */
+      background: -webkit-linear-gradient(top,  $c0 0%,$c1 100%); /* Chrome10-25,Safari5.1-6 */
+      background: linear-gradient(to bottom,  $c0 0%,$c1 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$c0', endColorstr='$c1',GradientType=0 ); /* IE6-9 */
 
+
+      h1 {
+        margin:0 0 8px;
+        font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 800;
+        font-size: 2.2em;
+      }
+      hr {
+        height:6px;
+        background-color:black;
+        border:0;
+        margin:5px 0;
+      }
+      p {
+        font-family: "HelveticaNeue", "Helvetica Neue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 400;
+        font-size:.75em;
+        margin:0;
+      }
+      ul {
+        list-style: none;
+        padding:0;
+        li {
+          padding:0;
+
+          &:not(:last-child) {
+            border-bottom:1px solid #CCC;
+          }
+          &:last-child {
+            margin-bottom:10px;
+          }
+
+          span {
+            font-family: "HelveticaNeue", "Helvetica Neue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+            font-weight: 400;
+            font-size:.85em;
+          }
+          span.title, span.per {
+            font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+            font-weight: 800;
+          }
+          span.value {
+            margin-left:3px;
+            font-size:.7em;
+          }
+          span.per {
+            float:right;
+            font-size:.7em;
+          }
+
+        }
       }
     }
+
   }
+
+
 }

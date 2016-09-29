@@ -10,6 +10,7 @@ var hasInit
 var domEvents
 var useShadows = false
 var boxTotal = 0
+var examMode = false
 
 var SCALE = 0.9
 var BOX_WIDTH = 14 * SCALE
@@ -314,8 +315,10 @@ function setup3d () {
   renderer.setClearColor(0x111111)
   renderer.setSize(window.innerWidth, window.innerHeight)
 
-  // var orbit = new THREE.OrbitControls(camera, renderer.domElement)
-  // orbit.enableZoom = false
+  if (examMode) {
+    var orbit = new THREE.OrbitControls(camera, renderer.domElement)
+  }
+  //orbit.enableZoom = false
 
   domEvents = new THREEx.DomEvents(camera, renderer.domElement)
 
@@ -341,8 +344,9 @@ function onResize () {
 
 function frameUpdate () {
   var r = rad2deg(world.rotation.y) + 0.4
-
-  world.rotation.y = deg2rad(r)
+  if(!examMode) {
+    world.rotation.y = deg2rad(r)
+  }
 }
 
 function buildWorld () {
@@ -351,25 +355,83 @@ function buildWorld () {
 // createTable()
 }
 
+function addPointLight(color,intensity,range,x,y,z,showLight) {
+  if (showLight && examMode) {
+    var geometry = new THREE.SphereBufferGeometry( 5, 32, 32 );
+    var material = new THREE.MeshBasicMaterial( {color: color} );
+    var sphere = new THREE.Mesh( geometry, material );
+    sphere.position.set(x,y,z);
+    world.add( sphere );
+  }
+
+  var l = new THREE.PointLight(color, intensity, range);
+  l.position.set(x,y,z)
+  l.castShadow = useShadows
+  world.add(l)
+}
+
+function addSpotLight(color,intensity,range,x,y,z,showLight) {
+  if (showLight && examMode) {
+
+    var geometry = new THREE.ConeGeometry( 5, 20, 32 );
+    var material = new THREE.MeshBasicMaterial( {color: color} );
+    var cone = new THREE.Mesh( geometry, material );
+    cone.position.set(x,y,z);
+    world.add( cone );
+
+  }
+
+  var spotLight = new THREE.SpotLight( color, 0.5, 0, Math.PI / 10 );
+  spotLight.position.set( x, y, z );
+  //
+  // spotLight.castShadow = true;
+  //
+  // spotLight.shadow.mapSize.width = 1024;
+  // spotLight.shadow.mapSize.height = 1024;
+  //
+  // spotLight.shadow.camera.near = 500;
+  // spotLight.shadow.camera.far = 4000;
+  // spotLight.shadow.camera.fov = 30;
+
+  world.add( spotLight );
+
+  var l = new THREE.PointLight(color, intensity, range);
+  l.position.set(x,y,z)
+  l.castShadow = useShadows
+  world.add(l)
+}
+
+
+
+
 function setupLights () {
-  var ambientLight = new THREE.AmbientLight(0x333333)
-  world.add(ambientLight)
+  // var ambientLight = new THREE.AmbientLight(0x333333)
+  // world.add(ambientLight)
 
-  var lights = []
-  lights[ 0 ] = new THREE.PointLight(0xFFFFFF, .5, 0)
-  lights[ 1 ] = new THREE.PointLight(0xFFFFFF, .5, 0)
-  lights[ 2 ] = new THREE.PointLight(0xFFFFFF, .5, 0)
-  lights[ 0 ].position.set(0, 200, 0)
-  lights[ 1 ].position.set(100, 200, 100)
-  lights[ 2 ].position.set(-100, -200, -100)
+  addPointLight(0xFFCCCC,1,900,-250,50,-95, false)
+  addPointLight(0xFFCCCC,0.75,600,60,45,90,true)
+  addSpotLight(0xFFDDDD,2,300,0,150,0,false)
 
-  lights[0].castShadow = useShadows
-  lights[1].castShadow = useShadows
-  lights[2].castShadow = useShadows
-
-  scene.add(lights[ 0 ])
-  scene.add(lights[ 1 ])
-  scene.add(lights[ 2 ])
+  // addLight(0xFFCCCC,1,500,-40,40,-40)
+  // addLight(0x0000FF,4,300,25,15,-25)
+  //
+  // var lights = []
+  // lights[ 0 ] = new THREE.PointLight(0xFFFFFF, .5, 0)
+  // lights[ 1 ] = new THREE.PointLight(0xFFFFFF, .5, 0)
+  // lights[ 2 ] = new THREE.PointLight(0xFFFFFF, .5, 0)
+  //
+  //
+  // lights[ 0 ].position.set(0, 200, 0)
+  // lights[ 1 ].position.set(100, 200, 100)
+  // lights[ 2 ].position.set(-100, -200, -100)
+  //
+  // lights[0].castShadow = useShadows
+  // lights[1].castShadow = useShadows
+  // lights[2].castShadow = useShadows
+  //
+  // scene.add(lights[ 0 ])
+  // scene.add(lights[ 1 ])
+  // scene.add(lights[ 2 ])
 
 // hemiLight = new THREE.HemisphereLight( 0xCCCCCC, 0x999999, .5 )
 // hemiLight.castShadow = useShadows
@@ -431,10 +493,6 @@ function loadWorld () {
       'Lower-cabinetdoor-2-door',
       'Lower-cabinetdoor-1-door',
       'Lower-cabinetdoor-3-door',
-      'door-3-door',
-      'door-2-door',
-      'door-1-door',
-      'Upper-cabinet-3',
       'Upper-Cabinet-2-Door',
       'Upper-Cabinet-3-Door',
       'Shelf'
@@ -467,9 +525,7 @@ function loadWorld () {
 
     var counterBases = [
       'Lower-Cabinet-1',
-      'Lower-Cabinet-base-1',
       'Lower-Cabinet-base-2',
-      'Lower-Cabinet-base-1',
       'Upper-cabinet-1-base',
       'Upper-cabinet-0-base',
       'Upper-Cabinet-3-Base',
@@ -483,9 +539,6 @@ function loadWorld () {
     setGroupMaterial(dae, counterBases, 0x17191c)
 
     var knobs = [
-      'door-3-knob',
-      'door-2-knob',
-      'door-1-knob',
       'Drawer-3-knob',
       'Drawer-2-knob',
       'Drawer-1-knob',
