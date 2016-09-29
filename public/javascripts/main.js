@@ -254,6 +254,9 @@ function connectToSocket () {
           colCt = 4
         } else if (ct >= 40) {
           colCt = 3
+        } else if (ct >= 30) {
+          colCt = 2
+
         } else if (ct >= 20) {
           colCt = 1
         }
