@@ -24,10 +24,12 @@ html, body {
     z-index: 2;
     display: flex;
     align-items: center;
-    justify-content: flex-end; }
+    justify-content: space-between; }
     html #gui.active, body #gui.active {
       transform: translateY(0); }
-    html #gui #leaderboard, body #gui #leaderboard {
+    html #gui #tweets, html #gui #leaderboard, body #gui #tweets, body #gui #leaderboard {
+      width: 225px; }
+    html #gui #leaderboard, html #gui #tweets .tweet, body #gui #leaderboard, body #gui #tweets .tweet {
       padding: 10px;
       padding-top: 5px;
       padding-bottom: 0px;
@@ -43,21 +45,41 @@ html, body {
       /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$c0', endColorstr='$c1',GradientType=0 );
       /* IE6-9 */ }
-      html #gui #leaderboard h1, body #gui #leaderboard h1 {
-        margin: 0 0 8px;
-        font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-        font-weight: 800;
-        font-size: 2.2em; }
-      html #gui #leaderboard hr, body #gui #leaderboard hr {
-        height: 6px;
-        background-color: black;
-        border: 0;
-        margin: 5px 0; }
-      html #gui #leaderboard p, body #gui #leaderboard p {
-        font-family: "HelveticaNeue", "Helvetica Neue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-        font-weight: 400;
-        font-size: .75em;
-        margin: 0; }
+    html #gui #tweets, body #gui #tweets {
+      list-style: none; }
+      html #gui #tweets .tweet, body #gui #tweets .tweet {
+        padding: 5px;
+        margin: 0;
+        margin-bottom: 10px; }
+        html #gui #tweets .tweet a, body #gui #tweets .tweet a {
+          color: black;
+          text-decoration: none;
+          font-size: .75em; }
+        html #gui #tweets .tweet dl, body #gui #tweets .tweet dl {
+          margin: 0; }
+        html #gui #tweets .tweet dt, html #gui #tweets .tweet dd, body #gui #tweets .tweet dt, body #gui #tweets .tweet dd {
+          margin: 0;
+          padding: 0; }
+        html #gui #tweets .tweet dt, body #gui #tweets .tweet dt {
+          font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+          font-weight: 800; }
+        html #gui #tweets .tweet dd, body #gui #tweets .tweet dd {
+          font-family: "HelveticaNeue", "Helvetica Neue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; }
+    html #gui #leaderboard h1, body #gui #leaderboard h1 {
+      margin: 0 0 8px;
+      font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+      font-weight: 800;
+      font-size: 2.2em; }
+    html #gui #leaderboard hr, body #gui #leaderboard hr {
+      height: 6px;
+      background-color: black;
+      border: 0;
+      margin: 5px 0; }
+    html #gui #leaderboard p, body #gui #leaderboard p {
+      font-family: "HelveticaNeue", "Helvetica Neue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+      font-weight: 400;
+      font-size: .75em;
+      margin: 0; }
 @keyframes blinkRed {
   html #gui #leaderboard 0% , body #gui #leaderboard 0%  {
     color: black; }
@@ -94,31 +116,31 @@ html, body {
     color: lime; }
   html #gui #leaderboard 100% , body #gui #leaderboard 100%  {
     color: black; } }
-      html #gui #leaderboard ul, body #gui #leaderboard ul {
-        list-style: none;
+    html #gui #leaderboard ul, body #gui #leaderboard ul {
+      list-style: none;
+      padding: 0; }
+      html #gui #leaderboard ul li, body #gui #leaderboard ul li {
         padding: 0; }
-        html #gui #leaderboard ul li, body #gui #leaderboard ul li {
-          padding: 0; }
-          html #gui #leaderboard ul li.up, body #gui #leaderboard ul li.up {
-            -moz-animation: blinkGreen 10s infinite;
-            -webkit-animation: blinkGreen 10s infinite;
-            animation: blinkGreen 10s infinite; }
-          html #gui #leaderboard ul li.down, body #gui #leaderboard ul li.down {
-            animation: blinkRed 10s infinite; }
-          html #gui #leaderboard ul li:not(:last-child), body #gui #leaderboard ul li:not(:last-child) {
-            border-bottom: 1px solid #CCC; }
-          html #gui #leaderboard ul li:last-child, body #gui #leaderboard ul li:last-child {
-            margin-bottom: 10px; }
-          html #gui #leaderboard ul li span, body #gui #leaderboard ul li span {
-            font-family: "HelveticaNeue", "Helvetica Neue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-            font-weight: 400;
-            font-size: .85em; }
-          html #gui #leaderboard ul li span.title, html #gui #leaderboard ul li span.per, body #gui #leaderboard ul li span.title, body #gui #leaderboard ul li span.per {
-            font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-            font-weight: 800; }
-          html #gui #leaderboard ul li span.value, body #gui #leaderboard ul li span.value {
-            margin-left: 3px;
-            font-size: .7em; }
-          html #gui #leaderboard ul li span.per, body #gui #leaderboard ul li span.per {
-            float: right;
-            font-size: .7em; }
+        html #gui #leaderboard ul li.up, body #gui #leaderboard ul li.up {
+          -moz-animation: blinkGreen 10s infinite;
+          -webkit-animation: blinkGreen 10s infinite;
+          animation: blinkGreen 10s infinite; }
+        html #gui #leaderboard ul li.down, body #gui #leaderboard ul li.down {
+          animation: blinkRed 10s infinite; }
+        html #gui #leaderboard ul li:not(:last-child), body #gui #leaderboard ul li:not(:last-child) {
+          border-bottom: 1px solid #CCC; }
+        html #gui #leaderboard ul li:last-child, body #gui #leaderboard ul li:last-child {
+          margin-bottom: 10px; }
+        html #gui #leaderboard ul li span, body #gui #leaderboard ul li span {
+          font-family: "HelveticaNeue", "Helvetica Neue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+          font-weight: 400;
+          font-size: .85em; }
+        html #gui #leaderboard ul li span.title, html #gui #leaderboard ul li span.per, body #gui #leaderboard ul li span.title, body #gui #leaderboard ul li span.per {
+          font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+          font-weight: 800; }
+        html #gui #leaderboard ul li span.value, body #gui #leaderboard ul li span.value {
+          margin-left: 3px;
+          font-size: .7em; }
+        html #gui #leaderboard ul li span.per, body #gui #leaderboard ul li span.per {
+          float: right;
+          font-size: .7em; }

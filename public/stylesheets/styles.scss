@@ -34,8 +34,13 @@ html,body {
     z-index:2;
     display:flex;
     align-items: center;
-    justify-content: flex-end;
-    #leaderboard {
+    //justify-content: flex-end;
+    justify-content:space-between;
+    #tweets, #leaderboard {
+      width:225px;
+    }
+
+    #leaderboard, #tweets .tweet {
       padding:10px;
       padding-top:5px;
       padding-bottom:0px;
@@ -49,6 +54,39 @@ html,body {
       background: -webkit-linear-gradient(top,  $c0 0%,$c1 100%); /* Chrome10-25,Safari5.1-6 */
       background: linear-gradient(to bottom,  $c0 0%,$c1 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
       filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$c0', endColorstr='$c1',GradientType=0 ); /* IE6-9 */
+
+    }
+
+    #tweets {
+      list-style: none;
+      .tweet {
+        padding:5px;
+        margin:0;
+        margin-bottom:10px;
+        a {
+          color:black;
+          text-decoration: none;
+                  font-size:.75em;
+        }
+        dl {
+          margin:0;
+        }
+        dt,dd {
+          margin:0;
+          padding:0;
+        }
+        dt {
+          font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+          font-weight: 800;
+            }
+        dd {
+          font-family: "HelveticaNeue", "Helvetica Neue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+
+        }
+      }
+    }
+
+    #leaderboard {
 
       h1 {
         margin:0 0 8px;

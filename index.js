@@ -36,11 +36,13 @@ mongoose.connect('mongodb://127.0.0.1/cereals', {
 
 let socketServer = io(2052)
 socketServer.on('connection', (socket) => {
-  console.log('connection')
-  emitUpdate()
+  emitState(socket)
+  // console.log('connection')
+  // emitUpdate()
 })
 
-function emitUpdate () {
+
+function emitState (socket) {
   const PAST_HOURS = 3
   const OLDEST_POST = moment().subtract(PAST_HOURS, 'hours').toDate()
 
@@ -64,7 +66,7 @@ function emitUpdate () {
           total += rsp[i].count
         }
 
-        socketServer.emit('update', {rsp:rsp, total:total})
+        socket.emit('state', {rsp:rsp, total:total})
       } else {
         console.log('Error in query.', err)
       }
@@ -128,7 +130,7 @@ function initTwitter () {
         Cereal.create(obj)
           .then(() => {
             console.log('Order persisted in DB.')
-            emitUpdate()
+            emitUpdate(obj)
           }).catch((e) => {
           console.log('Error in persisting record to DB.', e)
         })
@@ -136,6 +138,10 @@ function initTwitter () {
         console.log("Couldn't find cereal in string.")
       }
     })
+}
+
+function emitUpdate(tweet) {
+  socketServer.emit('update',tweet);
 }
 
 initTwitter()

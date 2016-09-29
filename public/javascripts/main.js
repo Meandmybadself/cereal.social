@@ -111,7 +111,7 @@ function getBox (id) {
   var box = new THREE.BoxBufferGeometry(BOX_WIDTH, BOX_HEIGHT, BOX_DEPTH, 1, 1, 1)
   var color = cerealColors[id].color
   var shininess = 10
-  //var flatMat = new THREE.MeshLambertMaterial({color: color})
+  // var flatMat = new THREE.MeshLambertMaterial({color: color})
   var flatMat = new THREE.MeshPhongMaterial({ color: color, specular: color, shininess: shininess, shading: THREE.FlatShading })
   var mat = new THREE.MultiMaterial([
     flatMat,
@@ -200,13 +200,17 @@ function addBoxes (id, count) {
 }
 
 function removeBoxes (id, count, totalNum) {
-
 }
 
 function updateTable (id, count) {
   var li = $('li[data-id="' + id + '"]')
   li.find('span.value').text(count)
   li.find('span.per').text(Math.floor((count / boxTotal) * 100) + '%')
+}
+
+function createTweet (t) {
+  var li = $("<li class='tweet'><dl><dt><a href='https://twitter.com/" + t.screenname + "' target='_blank'>" + t.screenname + "</a></dt><dd><a href='https://twitter.com/statuses/" + t.id + "' target='_blank'>" + t.text + '</a></dd></dl></li>')
+  $('#tweets').append(li)
 }
 
 function connectToSocket () {
@@ -219,8 +223,22 @@ function connectToSocket () {
   socket.on('connect', function () {
     console.log('connected')
   })
-  socket.on('update', function (data) {
-    console.log('update', data)
+
+  socket.on('update', function (tweet) {
+    console.log('update', tweet)
+    // What cereal are we attributing this to?
+    var cId = tweet.cereal
+    var cObj = cereals[cId]
+    cObj.count++
+
+    createTweet(tweet)
+
+    addBoxes(cId, 1)
+    updateTable(cId, cObj.count)
+  })
+
+  socket.on('state', function (data) {
+    console.log('state', data)
 
     var ll
     boxTotal = data.total
@@ -281,9 +299,9 @@ function connectToSocket () {
         $('#leaderboard ul').append(li)
       }
       hasInit = true
-      setTimeout( function() {
-        $('canvas, #gui').addClass('active');
-      }, 500);
+      setTimeout(function () {
+        $('canvas, #gui').addClass('active')
+      }, 500)
     }
 
     ll = data.rsp.length
@@ -327,7 +345,7 @@ function setup3d () {
   if (examMode) {
     var orbit = new THREE.OrbitControls(camera, renderer.domElement)
   }
-  //orbit.enableZoom = false
+  // orbit.enableZoom = false
 
   domEvents = new THREEx.DomEvents(camera, renderer.domElement)
 
@@ -353,7 +371,7 @@ function onResize () {
 
 function frameUpdate () {
   var r = rad2deg(world.rotation.y) + 0.4
-  if(!examMode) {
+  if (!examMode) {
     world.rotation.y = deg2rad(r)
   }
 }
@@ -363,48 +381,45 @@ function buildWorld () {
   loadWorld()
 }
 
-function addPointLight(color,intensity,range,x,y,z,showLight) {
+function addPointLight (color, intensity, range, x, y, z, showLight) {
   if (showLight && examMode) {
-    var geometry = new THREE.SphereBufferGeometry( 5, 32, 32 );
-    var material = new THREE.MeshBasicMaterial( {color: color} );
-    var sphere = new THREE.Mesh( geometry, material );
-    sphere.position.set(x,y,z);
-    world.add( sphere );
+    var geometry = new THREE.SphereBufferGeometry(5, 32, 32)
+    var material = new THREE.MeshBasicMaterial({color: color})
+    var sphere = new THREE.Mesh(geometry, material)
+    sphere.position.set(x, y, z)
+    world.add(sphere)
   }
 
-  var l = new THREE.PointLight(color, intensity, range);
-  l.position.set(x,y,z)
+  var l = new THREE.PointLight(color, intensity, range)
+  l.position.set(x, y, z)
   l.castShadow = useShadows
   world.add(l)
 }
 
-function addSpotLight(color,intensity,range,x,y,z,showLight) {
+function addSpotLight (color, intensity, range, x, y, z, showLight) {
   if (showLight && examMode) {
-
-    var geometry = new THREE.ConeGeometry( 5, 20, 32 );
-    var material = new THREE.MeshBasicMaterial( {color: color} );
-    var cone = new THREE.Mesh( geometry, material );
-    cone.position.set(x,y,z);
-    world.add( cone );
-
+    var geometry = new THREE.ConeGeometry(5, 20, 32)
+    var material = new THREE.MeshBasicMaterial({color: color})
+    var cone = new THREE.Mesh(geometry, material)
+    cone.position.set(x, y, z)
+    world.add(cone)
   }
 
-  var spotLight = new THREE.SpotLight( color, 0.5, 0, Math.PI / 10 );
-  spotLight.position.set( x, y, z );
+  var spotLight = new THREE.SpotLight(color, 0.5, 0, Math.PI / 10)
+  spotLight.position.set(x, y, z)
 
-  world.add( spotLight );
+  world.add(spotLight)
 
-  var l = new THREE.PointLight(color, intensity, range);
-  l.position.set(x,y,z)
+  var l = new THREE.PointLight(color, intensity, range)
+  l.position.set(x, y, z)
   l.castShadow = useShadows
   world.add(l)
 }
-
 
 function setupLights () {
-  addPointLight(0xFFCCCC,1,900,-250,50,-95, false)
-  addPointLight(0xFFCCCC,0.75,600,60,45,90,true)
-  addSpotLight(0xFFDDDD,2,300,0,150,0,false)
+  addPointLight(0xFFCCCC, 1, 900, -250, 50, -95, false)
+  addPointLight(0xFFCCCC, 0.75, 600, 60, 45, 90, true)
+  addSpotLight(0xFFDDDD, 2, 300, 0, 150, 0, false)
 }
 
 function setGroupMaterial (dae, arr, col, isShiny) {
