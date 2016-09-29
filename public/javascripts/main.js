@@ -2,7 +2,6 @@ var scene
 var camera
 var world
 var renderer
-var table
 var io
 var socket
 var cereals
@@ -12,12 +11,12 @@ var useShadows = false
 var boxTotal = 0
 var examMode = false
 
-var SCALE = 0.9
+var SCALE = 1.2
 var BOX_WIDTH = 14 * SCALE
 var BOX_HEIGHT = 18 * SCALE
 var BOX_DEPTH = 3 * SCALE
 
-var GAP = .5
+var GAP = 0.5
 
 var TABLE_HEIGHT = 3
 
@@ -88,7 +87,7 @@ function deg2rad (degrees) {
 
 function getPosition (index) {
   var orderLen = order.length
-  var startX = (order[0].length * BOX_WIDTH) + (GAP * order[0].length - 1)
+  var startX = (order[0].length * BOX_WIDTH) + (GAP * order[0].length - 1) - 10
   var startY = (order.length * BOX_HEIGHT) + (GAP * order.length - 1)
 
   index++
@@ -112,8 +111,8 @@ function getBox (id) {
   var box = new THREE.BoxBufferGeometry(BOX_WIDTH, BOX_HEIGHT, BOX_DEPTH, 1, 1, 1)
   var color = cerealColors[id].color
   var shininess = 10
-  var flatMat = new THREE.MeshLambertMaterial({color: color})
-  // var flatMat = new THREE.MeshPhongMaterial({ color: color, specular: color, shininess: shininess, shading: THREE.FlatShading })
+  //var flatMat = new THREE.MeshLambertMaterial({color: color})
+  var flatMat = new THREE.MeshPhongMaterial({ color: color, specular: color, shininess: shininess, shading: THREE.FlatShading })
   var mat = new THREE.MultiMaterial([
     flatMat,
     flatMat,
@@ -193,19 +192,19 @@ function addBoxes (id, count) {
     var col = getShortestColumn(id)
     var kidsLen = col.children.length
     m.position.y = kidsLen * BOX_DEPTH
-    m.rotation.z = deg2rad(randomBetween(-8, 8))
+    m.rotation.z = deg2rad(randomBetween(-3, 3))
     col.add(m)
-    TweenMax.from(m.position, 0.3, {y: 200,ease: Quad.easeOut})
-    TweenMax.from(m.rotation, 0.3, {x: deg2rad(10),ease: Quad.easeOut})
+    TweenMax.from(m.position, 0.5, {y: 200,ease: Quad.easeOut})
+    TweenMax.from(m.rotation, 0.5, {x: deg2rad(5),ease: Quad.easeOut})
   }
 }
 
 function removeBoxes (id, count, totalNum) {
-  console.log('removeBoxes', id, count)
+
 }
 
 function updateTable (id, count) {
-  let li = $('li[data-id="' + id + '"]')
+  var li = $('li[data-id="' + id + '"]')
   li.find('span.value').text(count)
   li.find('span.per').text(Math.floor((count / boxTotal) * 100) + '%')
 }
@@ -265,6 +264,11 @@ function connectToSocket () {
           do3d.position.x = p.x
           do3d.position.y = p.y
           do3d.position.z = p.z
+
+          if (do3d.position.z > 0) {
+            do3d.rotation.y = deg2rad(180)
+          }
+
           cols.push(do3d)
           world.add(do3d)
         }
@@ -277,6 +281,9 @@ function connectToSocket () {
         $('#leaderboard ul').append(li)
       }
       hasInit = true
+      setTimeout( function() {
+        $('canvas, #gui').addClass('active');
+      }, 500);
     }
 
     ll = data.rsp.length
@@ -290,8 +297,10 @@ function connectToSocket () {
       updateTable(id, data.rsp[ll].count)
 
       if (diff > 0) {
+        $('li[data-id="' + id + '"]').removeClass('up down').addClass('up')
         addBoxes(id, diff)
       } else if (diff < 0) {
+        $('li[data-id="' + id + '"]').removeClass('up down').addClass('down')
         removeBoxes(id, diff)
       }
     }
@@ -300,10 +309,10 @@ function connectToSocket () {
 
 function setup3d () {
   scene = new THREE.Scene()
-  camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 12000)
-  camera.position.z = 240
-  camera.position.y = 280
-  camera.rotation.x = deg2rad(-43)
+  camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1200)
+  camera.position.z = 150
+  camera.position.y = 260
+  camera.rotation.x = deg2rad(-55)
   world = new THREE.Object3D()
 
   scene.add(world)
@@ -352,7 +361,6 @@ function frameUpdate () {
 function buildWorld () {
   setupLights()
   loadWorld()
-// createTable()
 }
 
 function addPointLight(color,intensity,range,x,y,z,showLight) {
@@ -383,15 +391,6 @@ function addSpotLight(color,intensity,range,x,y,z,showLight) {
 
   var spotLight = new THREE.SpotLight( color, 0.5, 0, Math.PI / 10 );
   spotLight.position.set( x, y, z );
-  //
-  // spotLight.castShadow = true;
-  //
-  // spotLight.shadow.mapSize.width = 1024;
-  // spotLight.shadow.mapSize.height = 1024;
-  //
-  // spotLight.shadow.camera.near = 500;
-  // spotLight.shadow.camera.far = 4000;
-  // spotLight.shadow.camera.fov = 30;
 
   world.add( spotLight );
 
@@ -402,40 +401,10 @@ function addSpotLight(color,intensity,range,x,y,z,showLight) {
 }
 
 
-
-
 function setupLights () {
-  // var ambientLight = new THREE.AmbientLight(0x333333)
-  // world.add(ambientLight)
-
   addPointLight(0xFFCCCC,1,900,-250,50,-95, false)
   addPointLight(0xFFCCCC,0.75,600,60,45,90,true)
   addSpotLight(0xFFDDDD,2,300,0,150,0,false)
-
-  // addLight(0xFFCCCC,1,500,-40,40,-40)
-  // addLight(0x0000FF,4,300,25,15,-25)
-  //
-  // var lights = []
-  // lights[ 0 ] = new THREE.PointLight(0xFFFFFF, .5, 0)
-  // lights[ 1 ] = new THREE.PointLight(0xFFFFFF, .5, 0)
-  // lights[ 2 ] = new THREE.PointLight(0xFFFFFF, .5, 0)
-  //
-  //
-  // lights[ 0 ].position.set(0, 200, 0)
-  // lights[ 1 ].position.set(100, 200, 100)
-  // lights[ 2 ].position.set(-100, -200, -100)
-  //
-  // lights[0].castShadow = useShadows
-  // lights[1].castShadow = useShadows
-  // lights[2].castShadow = useShadows
-  //
-  // scene.add(lights[ 0 ])
-  // scene.add(lights[ 1 ])
-  // scene.add(lights[ 2 ])
-
-// hemiLight = new THREE.HemisphereLight( 0xCCCCCC, 0x999999, .5 )
-// hemiLight.castShadow = useShadows
-// world.add(hemiLight)
 }
 
 function setGroupMaterial (dae, arr, col, isShiny) {

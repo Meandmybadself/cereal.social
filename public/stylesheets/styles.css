@@ -5,11 +5,17 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #CCC; }
-  html canvas#world, body canvas#world {
+  background: #111; }
+  html canvas, body canvas {
     width: 100%;
     height: 100%; }
+  html #gui, html canvas, body #gui, body canvas {
+    opacity: 0;
+    transition: opacity 1s, transform 1s; }
+    html #gui.active, html canvas.active, body #gui.active, body canvas.active {
+      opacity: 1; }
   html #gui, body #gui {
+    transform: translateY(20px);
     position: absolute;
     top: 0;
     left: 0;
@@ -19,6 +25,8 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: flex-end; }
+    html #gui.active, body #gui.active {
+      transform: translateY(0); }
     html #gui #leaderboard, body #gui #leaderboard {
       padding: 10px;
       padding-top: 5px;
@@ -50,11 +58,53 @@ html, body {
         font-weight: 400;
         font-size: .75em;
         margin: 0; }
+@keyframes blinkRed {
+  html #gui #leaderboard 0% , body #gui #leaderboard 0%  {
+    color: black; }
+  html #gui #leaderboard 40% , body #gui #leaderboard 40%  {
+    color: red; }
+  html #gui #leaderboard 60% , body #gui #leaderboard 60%  {
+    color: red; }
+  html #gui #leaderboard 100% , body #gui #leaderboard 100%  {
+    color: black; } }
+@-webkit-keyframes blinkGreen {
+  html #gui #leaderboard 0% , body #gui #leaderboard 0%  {
+    color: black; }
+  html #gui #leaderboard 40% , body #gui #leaderboard 40%  {
+    color: lime; }
+  html #gui #leaderboard 60% , body #gui #leaderboard 60%  {
+    color: lime; }
+  html #gui #leaderboard 100% , body #gui #leaderboard 100%  {
+    color: black; } }
+@-moz-keyframes blinkGreen {
+  html #gui #leaderboard 0% , body #gui #leaderboard 0%  {
+    color: black; }
+  html #gui #leaderboard 40% , body #gui #leaderboard 40%  {
+    color: lime; }
+  html #gui #leaderboard 60% , body #gui #leaderboard 60%  {
+    color: lime; }
+  html #gui #leaderboard 100% , body #gui #leaderboard 100%  {
+    color: black; } }
+@keyframes blinkGreen {
+  html #gui #leaderboard 0% , body #gui #leaderboard 0%  {
+    color: black; }
+  html #gui #leaderboard 40% , body #gui #leaderboard 40%  {
+    color: lime; }
+  html #gui #leaderboard 60% , body #gui #leaderboard 60%  {
+    color: lime; }
+  html #gui #leaderboard 100% , body #gui #leaderboard 100%  {
+    color: black; } }
       html #gui #leaderboard ul, body #gui #leaderboard ul {
         list-style: none;
         padding: 0; }
         html #gui #leaderboard ul li, body #gui #leaderboard ul li {
           padding: 0; }
+          html #gui #leaderboard ul li.up, body #gui #leaderboard ul li.up {
+            -moz-animation: blinkGreen 10s infinite;
+            -webkit-animation: blinkGreen 10s infinite;
+            animation: blinkGreen 10s infinite; }
+          html #gui #leaderboard ul li.down, body #gui #leaderboard ul li.down {
+            animation: blinkRed 10s infinite; }
           html #gui #leaderboard ul li:not(:last-child), body #gui #leaderboard ul li:not(:last-child) {
             border-bottom: 1px solid #CCC; }
           html #gui #leaderboard ul li:last-child, body #gui #leaderboard ul li:last-child {

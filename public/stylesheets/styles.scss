@@ -5,14 +5,27 @@ html,body {
   width:100%;
   height:100%;
   overflow:hidden;
-  background:#CCC;
+  background:#111;
 
-  canvas#world {
+  canvas {
     width:100%;
     height:100%;
+
+  }
+
+  #gui, canvas {
+    opacity:0;
+    transition: opacity 1s, transform 1s;
+    &.active {
+      opacity:1;
+    }
   }
 
   #gui {
+    transform:translateY(20px);
+    &.active {
+      transform:translateY(0);
+    }
     position: absolute;
     top:0;
     left:0;
@@ -20,7 +33,6 @@ html,body {
     bottom:0;
     z-index:2;
     display:flex;
-    //display:none;
     align-items: center;
     justify-content: flex-end;
     #leaderboard {
@@ -37,7 +49,6 @@ html,body {
       background: -webkit-linear-gradient(top,  $c0 0%,$c1 100%); /* Chrome10-25,Safari5.1-6 */
       background: linear-gradient(to bottom,  $c0 0%,$c1 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
       filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$c0', endColorstr='$c1',GradientType=0 ); /* IE6-9 */
-
 
       h1 {
         margin:0 0 8px;
@@ -57,11 +68,48 @@ html,body {
         font-size:.75em;
         margin:0;
       }
+
+      @keyframes blinkRed {
+        0%   { color: rgba(0,0,0,1); }
+        40%   { color: rgba(255,0,0,1); }
+        60%   { color: rgba(255,0,0,1); }
+        100% { color: rgba(0,0,0,1); }
+      }
+
+      @-webkit-keyframes blinkGreen {
+        0%   { color: rgba(0,0,0,1); }
+        40%   { color: rgba(0,255,0,1); }
+        60%   { color: rgba(0,255,0,1); }
+        100% { color: rgba(0,0,0,1); }
+      }
+      @-moz-keyframes blinkGreen {
+        0%   { color: rgba(0,0,0,1); }
+        40%   { color: rgba(0,255,0,1); }
+        60%   { color: rgba(0,255,0,1); }
+        100% { color: rgba(0,0,0,1); }
+      }
+
+      @keyframes blinkGreen {
+        0%   { color: rgba(0,0,0,1); }
+        40%   { color: rgba(0,255,0,1); }
+        60%   { color: rgba(0,255,0,1); }
+        100% { color: rgba(0,0,0,1); }
+      }
+
       ul {
         list-style: none;
         padding:0;
         li {
           padding:0;
+
+          &.up {
+            -moz-animation:blinkGreen 10s infinite;
+            -webkit-animation:blinkGreen 10s infinite;
+            animation:blinkGreen 10s infinite;
+          }
+          &.down {
+            animation:blinkRed 10s infinite;
+          }
 
           &:not(:last-child) {
             border-bottom:1px solid #CCC;
