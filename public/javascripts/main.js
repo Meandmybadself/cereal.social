@@ -11,7 +11,7 @@ var useShadows = false
 var boxTotal = 0
 var examMode = false
 
-var SCALE = 1.2
+var SCALE = 1.1
 var BOX_WIDTH = 14 * SCALE
 var BOX_HEIGHT = 18 * SCALE
 var BOX_DEPTH = 3 * SCALE
