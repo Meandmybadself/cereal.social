@@ -11,10 +11,10 @@ var useShadows = false
 var boxTotal = 0
 var examMode = false
 
-var SCALE = 1
-var BOX_WIDTH = 14 * SCALE
-var BOX_HEIGHT = 18 * SCALE
-var BOX_DEPTH = 3 * SCALE
+var BOX_SCALE = 1
+var BOX_WIDTH = 14 * BOX_SCALE
+var BOX_HEIGHT = 18 * BOX_SCALE
+var BOX_DEPTH = 3 * BOX_SCALE
 
 var GAP = 0.5
 
@@ -106,28 +106,37 @@ function getPosition (index) {
 }
 
 function getBox (id) {
-  var textureLoader = new THREE.TextureLoader()
-  var texPath = '/assets/images/textures/cereals/' + id + '.jpg'
+
   var box = new THREE.BoxBufferGeometry(BOX_WIDTH, BOX_HEIGHT, BOX_DEPTH, 1, 1, 1)
-  var color = cerealColors[id].color
-  var shininess = 10
-  // var flatMat = new THREE.MeshLambertMaterial({color: color})
-  var flatMat = new THREE.MeshPhongMaterial({ color: color, specular: color, shininess: shininess, shading: THREE.FlatShading })
-  var mat = new THREE.MultiMaterial([
-    flatMat,
-    flatMat,
-    flatMat,
-    flatMat,
-    flatMat,
-    // flatMat,
-    new THREE.MeshBasicMaterial({map: textureLoader.load(texPath)}),
-    flatMat
-  ])
+  var mat = getMat(id)
   var mesh = new THREE.Mesh(box, mat)
   mesh.castShadow = useShadows
   mesh.rotation.x = deg2rad(90)
 
   return mesh
+}
+
+function getMat(id) {
+
+  if(!cerealColors[id].mat) {
+    var textureLoader = new THREE.TextureLoader()
+    var texPath = '/assets/images/textures/cereals/' + id + '.jpg'
+    var color = cerealColors[id].color
+    var shininess = 10
+    var flatMat = new THREE.MeshPhongMaterial({ color: color, specular: color, shininess: 10, shading: THREE.FlatShading })
+    var mat = new THREE.MultiMaterial([
+      flatMat,
+      flatMat,
+      flatMat,
+      flatMat,
+      flatMat,
+      // flatMat,
+      new THREE.MeshBasicMaterial({map: textureLoader.load(texPath)}),
+      flatMat
+    ])
+    cerealColors[id].mat = mat;
+  }
+  return cerealColors[id].mat;
 }
 
 $(function () {
@@ -186,9 +195,6 @@ function addBoxes (id, count) {
 
   for (var i = 0; i < count; i++) {
     var m = mesh.clone()
-    // domEvents.addEventListener(m, 'click', function (e) {
-    //   console.log('click', e)
-    // })
     var col = getShortestColumn(id)
     var kidsLen = col.children.length
     m.position.y = kidsLen * BOX_DEPTH
@@ -199,8 +205,15 @@ function addBoxes (id, count) {
   }
 }
 
-function removeBoxes (id, count, totalNum) {
+function removeBoxes (id, count) {
+  console.log('removeBoxes',id,count)
+  var col = getTallestColumn(id)
+  TweenMax.to(col, 0.3, {y:(-BOX_DEPTH * BOX_SCALE) * count, onComplete:onBoxesRemoved, onCompleteParams:[id,count]})
 }
+
+// function onBoxesRemoved(id,count) {
+//   //Remove the bottom 'count' boxes, then snap all the other boxes up by
+// }
 
 function updateTable (id, count) {
   var li = $('li[data-id="' + id + '"]')
@@ -221,11 +234,11 @@ function connectToSocket () {
   }
 
   socket.on('connect', function () {
-    console.log('connected')
+    //console.log('connected')
   })
 
   socket.on('update', function (tweet) {
-    console.log('update', tweet)
+    //console.log('update', tweet)
     // What cereal are we attributing this to?
     var cId = tweet.cereal
     var cObj = cereals[cId]

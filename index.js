@@ -37,9 +37,11 @@ mongoose.connect('mongodb://127.0.0.1/cereals', {
 let socketServer = io(2052)
 socketServer.on('connection', (socket) => {
   emitState(socket)
-  // console.log('connection')
-  // emitUpdate()
 })
+
+setTimeout(function() {
+  emitState()
+}, 20000)
 
 
 function emitState (socket) {
@@ -65,8 +67,11 @@ function emitState (socket) {
         for(let i in rsp) {
           total += rsp[i].count
         }
-
-        socket.emit('state', {rsp:rsp, total:total})
+        if (socket) {
+          socket.emit('state', {rsp:rsp, total:total})
+        } else {
+          socketServer.emit('state', {rsp:rsp, total:total})
+        }
       } else {
         console.log('Error in query.', err)
       }

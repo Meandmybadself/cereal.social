@@ -48,18 +48,23 @@ html, body {
     html #gui #tweets, body #gui #tweets {
       list-style: none; }
       html #gui #tweets .tweet, body #gui #tweets .tweet {
-        padding: 5px;
+        padding: 8px;
         margin: 0;
-        margin-bottom: 10px; }
+        margin-bottom: 8px; }
         html #gui #tweets .tweet a, body #gui #tweets .tweet a {
           color: black;
           text-decoration: none;
           font-size: .75em; }
         html #gui #tweets .tweet dl, body #gui #tweets .tweet dl {
-          margin: 0; }
+          margin: 0px;
+          padding: 10px;
+          border: 3px dashed black; }
         html #gui #tweets .tweet dt, html #gui #tweets .tweet dd, body #gui #tweets .tweet dt, body #gui #tweets .tweet dd {
           margin: 0;
           padding: 0; }
+        html #gui #tweets .tweet dd, body #gui #tweets .tweet dd {
+          display: flex;
+          flex-direction: row; }
         html #gui #tweets .tweet dt, body #gui #tweets .tweet dt {
           font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
           font-weight: 800; }
