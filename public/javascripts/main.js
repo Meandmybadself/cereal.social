@@ -254,11 +254,8 @@ function connectToSocket () {
           colCt = 4
         } else if (ct >= 40) {
           colCt = 3
-        } else if (ct >= 30) {
+        } else if (ct >= 25) {
           colCt = 2
-
-        } else if (ct >= 20) {
-          colCt = 1
         }
 
         for (var i = 0; i < colCt; i++) {
