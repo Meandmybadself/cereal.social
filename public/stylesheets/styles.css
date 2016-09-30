@@ -4,11 +4,17 @@ html, body {
   margin: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden;
   background: #111; }
   html canvas, body canvas {
     width: 100%;
     height: 100%; }
+  @media screen and (max-width: 1000px) {
+    html body, body body {
+      display: flex;
+      flex-direction: column-reverse; }
+      html body #gui, body body #gui {
+        position: relative;
+        flex-direction: row-reverse; } }
   html #gui, html canvas, body #gui, body canvas {
     opacity: 0;
     transition: opacity 1s, transform 1s; }
