@@ -208,7 +208,7 @@ function addBoxes (id, count) {
 function removeBoxes (id, count) {
   console.log('removeBoxes',id,count)
   var col = getTallestColumn(id)
-  TweenMax.to(col, 0.3, {y:(-BOX_DEPTH * BOX_SCALE) * count, onComplete:onBoxesRemoved, onCompleteParams:[id,count]})
+  TweenMax.to(col, 0.3, {y:(-BOX_DEPTH * BOX_SCALE) * count})//, onComplete:onBoxesRemoved, onCompleteParams:[id,count]})
 }
 
 // function onBoxesRemoved(id,count) {
