@@ -46,11 +46,12 @@ html, body {
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$c0', endColorstr='$c1',GradientType=0 );
       /* IE6-9 */ }
     html #gui #tweets, body #gui #tweets {
+      width: 300px;
       list-style: none; }
       html #gui #tweets .tweet, body #gui #tweets .tweet {
         padding: 8px;
         margin: 0;
-        margin-bottom: 8px; }
+        margin-bottom: 10px; }
         html #gui #tweets .tweet a, body #gui #tweets .tweet a {
           color: black;
           text-decoration: none;
@@ -58,16 +59,45 @@ html, body {
         html #gui #tweets .tweet dl, body #gui #tweets .tweet dl {
           margin: 0px;
           padding: 10px;
-          border: 3px dashed black; }
+          border: 3px dashed black;
+          display: flex;
+          flex-direction: column;
+          align-items: center; }
         html #gui #tweets .tweet dt, html #gui #tweets .tweet dd, body #gui #tweets .tweet dt, body #gui #tweets .tweet dd {
           margin: 0;
           padding: 0; }
         html #gui #tweets .tweet dd, body #gui #tweets .tweet dd {
           display: flex;
-          flex-direction: row; }
+          flex-direction: row;
+          position: relative;
+          justify-content: flex-start;
+          align-items: flex-start; }
+          html #gui #tweets .tweet dd div, body #gui #tweets .tweet dd div {
+            position: relative;
+            width: 70%; }
+            html #gui #tweets .tweet dd div:nth-child(2), body #gui #tweets .tweet dd div:nth-child(2) {
+              width: 30%;
+              padding: 0 0 0 20px; }
+          html #gui #tweets .tweet dd img, body #gui #tweets .tweet dd img {
+            width: 100%;
+            box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3); }
         html #gui #tweets .tweet dt, body #gui #tweets .tweet dt {
           font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-          font-weight: 800; }
+          font-weight: 800;
+          font-size: .8em;
+          text-align: center;
+          margin-bottom: 10px;
+          border: 1px solid rgba(0, 0, 0, 0.5);
+          text-transform: uppercase;
+          padding: 2px;
+          width: 60%;
+          transition: background 0.2s ease-out, color 0.2s ease-out; }
+          html #gui #tweets .tweet dt a, body #gui #tweets .tweet dt a {
+            transition: background 0.2s ease-out, color 0.2s ease-out; }
+          html #gui #tweets .tweet dt:hover, body #gui #tweets .tweet dt:hover {
+            background: black; }
+            html #gui #tweets .tweet dt:hover a, body #gui #tweets .tweet dt:hover a {
+              color: white; }
         html #gui #tweets .tweet dd, body #gui #tweets .tweet dd {
           font-family: "HelveticaNeue", "Helvetica Neue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; }
     html #gui #leaderboard h1, body #gui #leaderboard h1 {

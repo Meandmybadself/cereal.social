@@ -7,6 +7,7 @@ const data = require('./data.js')
 const mongoose = require('mongoose')
 const io = require('socket.io')
 const moment = require('moment')
+const swearies = require('./swearies.js')
 
 let terms = []
 data.cereals.forEach((el) => {
@@ -39,10 +40,9 @@ socketServer.on('connection', (socket) => {
   emitState(socket)
 })
 
-setTimeout(function() {
+setTimeout(function () {
   emitState()
 }, 20000)
-
 
 function emitState (socket) {
   const PAST_HOURS = 3
@@ -62,15 +62,15 @@ function emitState (socket) {
     .exec((err, rsp) => {
       if (!err) {
 
-        //run through & total the results.
-        let total = 0;
-        for(let i in rsp) {
+        // run through & total the results.
+        let total = 0
+        for (let i in rsp) {
           total += rsp[i].count
         }
         if (socket) {
-          socket.emit('state', {rsp:rsp, total:total})
+          socket.emit('state', {rsp: rsp, total: total})
         } else {
-          socketServer.emit('state', {rsp:rsp, total:total})
+          socketServer.emit('state', {rsp: rsp, total: total})
         }
       } else {
         console.log('Error in query.', err)
@@ -86,6 +86,16 @@ function getCerealForText (txt) {
     let label = el.label.toLowerCase()
     if (txt.indexOf(label) > -1) {
       return el.id
+    }
+  }
+}
+
+function hasSwearies (txt) {
+  let t = txt.toLowerCase().split(' ')
+  let ll = t.length
+  while(ll--) {
+    if (swearies[t[ll]]) {
+      return true
     }
   }
 }
@@ -120,7 +130,10 @@ function initTwitter () {
     })
     .on('tweet', (e) => {
       console.log(e.text)
-
+      if (hasSwearies(e.text)) {
+        console.log("Stopping due to swearies", e.text);
+        return
+      }
       let cerealId = getCerealForText(e.text)
 
       if (cerealId) {
@@ -145,8 +158,8 @@ function initTwitter () {
     })
 }
 
-function emitUpdate(tweet) {
-  socketServer.emit('update',tweet);
+function emitUpdate (tweet) {
+  socketServer.emit('update', tweet)
 }
 
 initTwitter()

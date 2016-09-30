@@ -222,7 +222,7 @@ function updateTable (id, count) {
 }
 
 function createTweet (t) {
-  var li = $("<li class='tweet'><dl><dt><a href='https://twitter.com/" + t.screenname + "' target='_blank'>" + t.screenname + "</a></dt><dd><a href='https://twitter.com/statuses/" + t.id + "' target='_blank'>" + t.text + '</a></dd></dl></li>')
+  var li = $("<li class='tweet'><dl><dt><a href='https://twitter.com/" + t.screenname + "' target='_blank'>" + t.screenname + "</a></dt><dd><div><a href='https://twitter.com/statuses/" + t.id + "' target='_blank'>" + t.text + '</a></div><div><img class="cereal" src="/assets/images/textures/cereals/' + t.cereal + '.jpg" alt="' + t.cereal + '"/></div></dd></dl></li>')
   $('#tweets').append(li)
 }
 
