@@ -134,6 +134,7 @@ function getMat(id) {
       new THREE.MeshBasicMaterial({map: textureLoader.load(texPath)}),
       flatMat
     ])
+
     cerealColors[id].mat = mat;
   }
   return cerealColors[id].mat;
@@ -187,8 +188,7 @@ function getTallestColumn (id) {
   return mostCol
 }
 
-function onBoxMouseover (e) {}
-function onBoxMouseout (e) {}
+
 
 function addBoxes (id, count) {
   var mesh = getBox(id)
@@ -199,10 +199,22 @@ function addBoxes (id, count) {
     var kidsLen = col.children.length
     m.position.y = kidsLen * BOX_DEPTH
     m.rotation.z = deg2rad(randomBetween(-3, 3))
+
     col.add(m)
     TweenMax.from(m.position, 0.5, {y: 200,ease: Quad.easeOut})
     TweenMax.from(m.rotation, 0.5, {x: deg2rad(5),ease: Quad.easeOut})
+
+    domEvents.addEventListener(m,'mouseover',$.proxy(onBoxMouseover, this));
+    domEvents.addEventListener(m,'mouseout',$.proxy(onBoxMouseout, this));
+
   }
+}
+
+function onBoxMouseover (e) {
+  console.log('onBoxMouseover', e)
+}
+function onBoxMouseout (e) {
+
 }
 
 function removeBoxes (id, count) {
