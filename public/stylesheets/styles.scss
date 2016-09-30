@@ -34,7 +34,7 @@ html,body {
   }
 
   #gui {
-
+  pointer-events: none;
     transform:translateY(20px);
     &.active {
       transform:translateY(0);

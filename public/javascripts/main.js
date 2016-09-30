@@ -9,7 +9,7 @@ var hasInit
 var domEvents
 var useShadows = false
 var boxTotal = 0
-var examMode = false
+var examMode = document.location.hash === '#exam'
 
 var BOX_SCALE = 1
 var BOX_WIDTH = 14 * BOX_SCALE
@@ -372,8 +372,9 @@ function setup3d () {
 
   if (examMode) {
     var orbit = new THREE.OrbitControls(camera, renderer.domElement)
+    orbit.enableZoom = true
+    //$('#gui').css('display','none')
   }
-  // orbit.enableZoom = false
 
   domEvents = new THREEx.DomEvents(camera, renderer.domElement)
 
@@ -411,11 +412,11 @@ function buildWorld () {
 
 function addPointLight (color, intensity, range, x, y, z, showLight) {
   if (showLight && examMode) {
-    var geometry = new THREE.SphereBufferGeometry(5, 32, 32)
-    var material = new THREE.MeshBasicMaterial({color: color})
-    var sphere = new THREE.Mesh(geometry, material)
-    sphere.position.set(x, y, z)
-    world.add(sphere)
+    // var geometry = new THREE.SphereBufferGeometry(5, 32, 32)
+    // var material = new THREE.MeshBasicMaterial({color: color})
+    // var sphere = new THREE.Mesh(geometry, material)
+    // sphere.position.set(x, y, z)
+    // world.add(sphere)
   }
 
   var l = new THREE.PointLight(color, intensity, range)

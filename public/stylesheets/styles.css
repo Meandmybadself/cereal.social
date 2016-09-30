@@ -20,6 +20,7 @@ html, body {
     html #gui.active, html canvas.active, body #gui.active, body canvas.active {
       opacity: 1; }
   html #gui, body #gui {
+    pointer-events: none;
     transform: translateY(20px);
     position: absolute;
     top: 0;
