@@ -2,7 +2,6 @@
   <head>
     <title>Social Cereal</title>
     <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/x-icon" >
-    <link rel="stylesheet" href="/stylesheets/application.css">
 
     <meta charset="utf-8">
     <meta name="description" content="Cereal tweets!">
@@ -29,7 +28,10 @@
   </head>
   <body>
     <div id='gui'>
-      <ul id='tweets'></ul>
+      <div id='tweetHolder'>
+        <h2>Tweet about your favorite cereal to see it here!</h2>
+        <ul id='tweets'></ul>
+      </div>
       <div id='leaderboard'>
         <h1>Social Cereal</h1>
         <p>(in tweets per the past 24 hours)</p>
@@ -37,11 +39,14 @@
         <ul id='cereals'></ul>
         <hr />
         <div id='footer'>Made with Love, in Minnesota,<br/> by <a href='https://permanentrecord.io'>Permanent Record</a> | <a href='mailto:hello@permanentrecord.io'>contact</a></div>
+        <div id='reco'>Like it? <a href='#'>Tell your friends!</a><br/>
+          Hate it? <a href='#'>Tell your enemies!</a></div>
       </div>
     </div>
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <script src="javascripts/TweenMax.min.js"></script>
+    <script src="javascripts/moment.min.js"></script>
     <script src="javascripts/threex.domevents.js"></script>
     <script src="javascripts/three.min.js"></script>
     <script src="javascripts/OrbitControls.js"></script>

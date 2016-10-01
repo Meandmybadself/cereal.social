@@ -146,9 +146,9 @@ function initTwitter () {
         }
 
         Cereal.create(obj)
-          .then(() => {
-            console.log('Order persisted in DB.')
-            emitUpdate(obj)
+          .then((o) => {
+            //console.log('Order persisted in DB.',o)
+            emitUpdate(o)
           }).catch((e) => {
           console.log('Error in persisting record to DB.', e)
         })
@@ -159,6 +159,8 @@ function initTwitter () {
 }
 
 function emitUpdate (tweet) {
+  delete tweet['__v']
+  delete tweet['_id']
   socketServer.emit('update', tweet)
 }
 

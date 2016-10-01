@@ -49,16 +49,37 @@ html, body {
       /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$c0', endColorstr='$c1',GradientType=0 );
       /* IE6-9 */ }
-    html #gui #tweets, body #gui #tweets {
-      width: 300px;
-      list-style: none; }
+    html #gui #tweetHolder, body #gui #tweetHolder {
+      margin-left: 20px;
+      width: 300px; }
       @media screen and (max-height: 700px) {
-        html #gui #tweets, body #gui #tweets {
+        html #gui #tweetHolder, body #gui #tweetHolder {
           width: 550px;
           -moz-column-count: 2;
           -webkit-column-count: 2;
           column-count: 2; } }
+      html #gui #tweetHolder h2, body #gui #tweetHolder h2 {
+        padding: 10px;
+        font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 800;
+        font-size: 1.3em;
+        /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,e5e5e5+100;White+3D */
+        background: white;
+        /* Old browsers */
+        background: -moz-linear-gradient(top, white 0%, #e5e5e5 100%);
+        /* FF3.6-15 */
+        background: -webkit-linear-gradient(top, white 0%, #e5e5e5 100%);
+        /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to bottom, white 0%, #e5e5e5 100%);
+        /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$c0', endColorstr='$c1',GradientType=0 );
+        /* IE6-9 */ }
+    html #gui #tweets, body #gui #tweets {
+      padding: 0;
+      margin: 0;
+      list-style: none; }
       html #gui #tweets .tweet, body #gui #tweets .tweet {
+        pointer-events: all;
         padding: 8px;
         margin: 0;
         margin-bottom: 10px; }
@@ -92,22 +113,31 @@ html, body {
             width: 100%;
             box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3); }
         html #gui #tweets .tweet dt, body #gui #tweets .tweet dt {
-          font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-          font-weight: 800;
-          font-size: .8em;
-          text-align: center;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
           margin-bottom: 10px;
-          border: 1px solid rgba(0, 0, 0, 0.5);
           text-transform: uppercase;
           padding: 2px;
-          width: 60%;
-          transition: background 0.2s ease-out, color 0.2s ease-out; }
-          html #gui #tweets .tweet dt a, body #gui #tweets .tweet dt a {
-            transition: background 0.2s ease-out, color 0.2s ease-out; }
-          html #gui #tweets .tweet dt:hover, body #gui #tweets .tweet dt:hover {
-            background: black; }
-            html #gui #tweets .tweet dt:hover a, body #gui #tweets .tweet dt:hover a {
-              color: white; }
+          width: 60%; }
+          html #gui #tweets .tweet dt table td, body #gui #tweets .tweet dt table td {
+            padding: 0 10px;
+            font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+            font-weight: 800;
+            font-size: .8em;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.5); }
+            html #gui #tweets .tweet dt table td:nth-child(1), body #gui #tweets .tweet dt table td:nth-child(1) {
+              transition: background 0.4s ease-out, color 0.4s ease-out; }
+              html #gui #tweets .tweet dt table td:nth-child(1) a, body #gui #tweets .tweet dt table td:nth-child(1) a {
+                transition: background 0.4s ease-out, color 0.4s ease-out; }
+              html #gui #tweets .tweet dt table td:nth-child(1):hover, body #gui #tweets .tweet dt table td:nth-child(1):hover {
+                background: #555; }
+                html #gui #tweets .tweet dt table td:nth-child(1):hover a, body #gui #tweets .tweet dt table td:nth-child(1):hover a {
+                  color: white; }
+            html #gui #tweets .tweet dt table td:nth-child(2), body #gui #tweets .tweet dt table td:nth-child(2) {
+              border-left: 0; }
         html #gui #tweets .tweet dd, body #gui #tweets .tweet dd {
           font-family: "HelveticaNeue", "Helvetica Neue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; }
     html #gui #leaderboard h1, body #gui #leaderboard h1 {
@@ -125,15 +155,21 @@ html, body {
       font-weight: 400;
       font-size: .75em;
       margin: 0; }
+    html #gui #leaderboard #footer, html #gui #leaderboard #reco, body #gui #leaderboard #footer, body #gui #leaderboard #reco {
+      text-align: center; }
+      html #gui #leaderboard #footer a, html #gui #leaderboard #footer a:visited, html #gui #leaderboard #reco a, html #gui #leaderboard #reco a:visited, body #gui #leaderboard #footer a, body #gui #leaderboard #footer a:visited, body #gui #leaderboard #reco a, body #gui #leaderboard #reco a:visited {
+        color: red; }
     html #gui #leaderboard #footer, body #gui #leaderboard #footer {
       font-family: "HelveticaNeue", "Helvetica Neue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
       font-weight: 500;
       font-size: .7em;
-      text-align: center;
-      padding: 10px 0px;
+      padding: 10px 0px 5px;
       margin-bottom: 10px; }
-      html #gui #leaderboard #footer a, html #gui #leaderboard #footer a:visited, body #gui #leaderboard #footer a, body #gui #leaderboard #footer a:visited {
-        color: red; }
+    html #gui #leaderboard #reco, body #gui #leaderboard #reco {
+      font-family: "HelveticaNeue", "Helvetica Neue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+      font-weight: 500;
+      font-size: .7em;
+      padding: 0px 0px 15px; }
 @keyframes blinkRed {
   html #gui #leaderboard 0% , body #gui #leaderboard 0%  {
     color: black; }
@@ -181,6 +217,7 @@ html, body {
       list-style: none;
       padding: 0; }
       html #gui #leaderboard ul li, body #gui #leaderboard ul li {
+        pointer-events: all;
         padding: 0; }
         html #gui #leaderboard ul li.up, body #gui #leaderboard ul li.up {
           -moz-animation: blinkGreen 10s infinite;
