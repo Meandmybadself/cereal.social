@@ -95,6 +95,7 @@ html,body {
       list-style: none;
 
       .tweet {
+
         pointer-events: all;
         padding:8px;
         margin:0;
@@ -123,6 +124,12 @@ html,body {
           position:relative;
           justify-content: flex-start;
           align-items: flex-start;
+          a {
+            transition:color .3s ease-out;
+            &:hover {
+              color:#DD0000;
+            }
+          }
           div {
             position:relative;
             width:70%;
@@ -164,7 +171,7 @@ html,body {
               padding:0 10px;
               font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
               font-weight: 800;
-              font-size: .8em;
+              font-size: .75em;
               text-align: center;
               border:1px solid rgba(0,0,0,.5);
             }
@@ -207,9 +214,16 @@ html,body {
       }
 
       #footer, #reco {
+        pointer-events: all;
         text-align: center;
         a,a:visited {
           color:red;
+          text-decoration: none;
+          border-bottom: 1px solid red;
+          transition: border .3s ease-out;
+          &:hover {
+            border-color:rgba(0,0,0,1);
+          }
         }
       }
 

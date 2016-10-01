@@ -103,6 +103,10 @@ html, body {
           position: relative;
           justify-content: flex-start;
           align-items: flex-start; }
+          html #gui #tweets .tweet dd a, body #gui #tweets .tweet dd a {
+            transition: color .3s ease-out; }
+            html #gui #tweets .tweet dd a:hover, body #gui #tweets .tweet dd a:hover {
+              color: #DD0000; }
           html #gui #tweets .tweet dd div, body #gui #tweets .tweet dd div {
             position: relative;
             width: 70%; }
@@ -125,7 +129,7 @@ html, body {
             padding: 0 10px;
             font-family: "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
             font-weight: 800;
-            font-size: .8em;
+            font-size: .75em;
             text-align: center;
             border: 1px solid rgba(0, 0, 0, 0.5); }
             html #gui #tweets .tweet dt table td:nth-child(1), body #gui #tweets .tweet dt table td:nth-child(1) {
@@ -156,9 +160,15 @@ html, body {
       font-size: .75em;
       margin: 0; }
     html #gui #leaderboard #footer, html #gui #leaderboard #reco, body #gui #leaderboard #footer, body #gui #leaderboard #reco {
+      pointer-events: all;
       text-align: center; }
       html #gui #leaderboard #footer a, html #gui #leaderboard #footer a:visited, html #gui #leaderboard #reco a, html #gui #leaderboard #reco a:visited, body #gui #leaderboard #footer a, body #gui #leaderboard #footer a:visited, body #gui #leaderboard #reco a, body #gui #leaderboard #reco a:visited {
-        color: red; }
+        color: red;
+        text-decoration: none;
+        border-bottom: 1px solid red;
+        transition: border .3s ease-out; }
+        html #gui #leaderboard #footer a:hover, html #gui #leaderboard #footer a:visited:hover, html #gui #leaderboard #reco a:hover, html #gui #leaderboard #reco a:visited:hover, body #gui #leaderboard #footer a:hover, body #gui #leaderboard #footer a:visited:hover, body #gui #leaderboard #reco a:hover, body #gui #leaderboard #reco a:visited:hover {
+          border-color: black; }
     html #gui #leaderboard #footer, body #gui #leaderboard #footer {
       font-family: "HelveticaNeue", "Helvetica Neue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
       font-weight: 500;
