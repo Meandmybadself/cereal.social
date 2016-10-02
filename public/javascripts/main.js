@@ -365,7 +365,6 @@ function showColumn(id) {
         var columns = cereals[i].columns;
         for(var j=0; j < columns.length; j++) {
           var colKids = columns[j].children
-          console.log(id,colKids)
           for(var k=0; k< colKids.length; k++) {
             var o3d = colKids[k];
             o3d.visible = false;
