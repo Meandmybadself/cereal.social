@@ -364,11 +364,8 @@ function showColumn(id) {
       if (i != id) {
         var columns = cereals[i].columns;
         for(var j=0; j < columns.length; j++) {
-          var colKids = columns[j].children
-          for(var k=0; k< colKids.length; k++) {
-            var o3d = colKids[k];
-            o3d.visible = false;
-          }
+          columns[j].visible = false;
+
         }
       }
     }
@@ -376,11 +373,7 @@ function showColumn(id) {
     for(var i in cereals) {
         var columns = cereals[i].columns;
         for(var j=0; j < columns.length; j++) {
-          var colKids = columns[j].children
-          for(var k=0; k< colKids.length; k++) {
-            var o3d = colKids[k];
-            o3d.visible = true;
-          }
+          columns[j].visible = true;
         }
     }
   }
