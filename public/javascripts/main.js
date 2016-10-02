@@ -201,8 +201,8 @@ function addBoxes (id, count) {
     TweenMax.from(m.position, 0.5, {y: 200,ease: Quad.easeOut})
     TweenMax.from(m.rotation, 0.5, {x: deg2rad(5),ease: Quad.easeOut})
 
-    domEvents.addEventListener(m, 'mouseover', $.proxy(onBoxMouseover, this))
-    domEvents.addEventListener(m, 'mouseout', $.proxy(onBoxMouseout, this))
+    //domEvents.addEventListener(m, 'mouseover', $.proxy(onBoxMouseover, this))
+    //domEvents.addEventListener(m, 'mouseout', $.proxy(onBoxMouseout, this))
   }
 }
 
