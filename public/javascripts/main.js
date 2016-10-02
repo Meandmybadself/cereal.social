@@ -376,7 +376,7 @@ function connectToSocket () {
 }
 
 function onTableMouseover (e) {
-  // console.log('onTableMouseover',$(e.currentTarget).data('id'))
+  console.log('onTableMouseover',$(e.currentTarget).data('id'))
   showColumn($(e.currentTarget).data('id'))
 }
 function onTableMouseout (e) {
@@ -386,10 +386,14 @@ function onTableMouseout (e) {
 function showColumn (id) {
   if (id) {
     for (var i in cereals) {
+      var columns = cereals[i].columns
       if (i != id) {
-        var columns = cereals[i].columns
         for (var j = 0; j < columns.length; j++) {
           columns[j].visible = false
+        }
+      } else {
+        for (var j = 0; j < columns.length; j++) {
+          columns[j].visible = true
         }
       }
     }
