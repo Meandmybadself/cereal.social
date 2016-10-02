@@ -449,7 +449,7 @@ function onResize () {
 
 function frameUpdate () {
   var r = rad2deg(world.rotation.y) + 0.4
-  if (!examMode || !isMousedOver) {
+  if (!isMousedOver) {
     world.rotation.y = deg2rad(r)
   }
 }
