@@ -343,7 +343,7 @@ function connectToSocket () {
 
         var label = cerealColors[c['_id']].label
         var per = Math.floor((ct / boxTotal) * 100)
-        var li = $('<a href="https://twitter.com/search?f=tweets&vertical=default&q=' + label + '"><li data-id="' + c['_id'] + '"><span class="title">' + label + '</span><span class="value">' + ct + '</span><span class="per">' + per + '%</span></li></a>')
+        var li = $('<a data-id="' + c['_id'] + '" href="https://twitter.com/search?f=tweets&vertical=default&q=' + label + '"><li><span class="title">' + label + '</span><span class="value">' + ct + '</span><span class="per">' + per + '%</span></li></a>')
         li.on('mouseover', $.proxy(onTableMouseover, this))
         li.on('mouseout', $.proxy(onTableMouseout, this))
         $('#leaderboard ul').append(li)
