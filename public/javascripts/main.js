@@ -195,18 +195,35 @@ function addBoxes (id, count) {
     var kidsLen = col.children.length
     m.position.y = kidsLen * BOX_DEPTH
     m.rotation.z = deg2rad(randomBetween(-3, 3))
-
+    m.name = id + '_' + getCerealStackCount(id)
     col.add(m)
     TweenMax.from(m.position, 0.5, {y: 200,ease: Quad.easeOut})
     TweenMax.from(m.rotation, 0.5, {x: deg2rad(5),ease: Quad.easeOut})
 
-    //domEvents.addEventListener(m, 'mouseover', $.proxy(onBoxMouseover, this))
-    //domEvents.addEventListener(m, 'mouseout', $.proxy(onBoxMouseout, this))
+    domEvents.addEventListener(m, 'mouseover', $.proxy(onBoxMouseover, this))
+    domEvents.addEventListener(m, 'mouseout', $.proxy(onBoxMouseout, this))
   }
 }
 
+function getCerealStackCount (id) {
+  console.log(id)
+  var cols = cereals[id].columns
+  var colCt = cols.length
+  var ct = 0
+  while(colCt--) {
+    ct += cols[colCt].children.length
+  }
+  return ct
+}
+
 function onBoxMouseover (e) {
-  console.log('onBoxMouseover', e)
+  var name = e.target.name.split('_')
+  var id = name[0]
+
+  var index = getCerealStackCount(id) - parseInt(name[1],10)
+
+  socket.emit('details', {cereal: id, index: index})
+
 }
 function onBoxMouseout (e) {
 }
@@ -214,7 +231,7 @@ function onBoxMouseout (e) {
 function removeBoxes (id, count) {
   console.log('removeBoxes', id, count)
   var col = getTallestColumn(id)
-  TweenMax.to(col, 0.3, {y: (-BOX_DEPTH * BOX_SCALE) * count}) // , onComplete:onBoxesRemoved, onCompleteParams:[id,count]})
+// TweenMax.to(col, 0.3, {y: (-BOX_DEPTH * BOX_SCALE) * count}) // , onComplete:onBoxesRemoved, onCompleteParams:[id,count]})
 }
 
 // function onBoxesRemoved(id,count) {
@@ -230,8 +247,9 @@ function updateTable (id, count) {
 function createTweet (t) {
   var d = moment(new Date(t.date)).format('h:mm:ss')
   var li = $("<li class='tweet'><dl><dt><table cellspacing='0'><tr><td><a href='https://twitter.com/" + t.screenname + "' target='_blank'>" + t.screenname + '</a></td><td>' + d + "</td></tr></table></dt><dd><div><a href='https://twitter.com/statuses/" + t.id + "' target='_blank'>" + t.text + '</a></div><div><img class="cereal" src="/assets/images/textures/cereals/' + t.cereal + '.jpg" alt="' + t.cereal + '"/></div></dd></dl></li>')
-  $('#tweets').append(li)
+  $('#tweets').prepend(li)
   if ($('#tweets').children().length > 4) {
+    console.log('yo')
     $('#tweets .tweet:last-child').remove()
   }
 }
@@ -242,6 +260,10 @@ function connectToSocket () {
   } else {
     socket = io.connect()
   }
+
+  socket.on('details', function(t) {
+      createTweet(t)
+  })
 
   socket.on('connect', function () {
     // console.log('connected')
@@ -261,7 +283,7 @@ function connectToSocket () {
   })
 
   socket.on('state', function (data) {
-    console.log('state', data)
+    //console.log('state', data)
 
     var ll
     boxTotal = data.total
@@ -318,9 +340,9 @@ function connectToSocket () {
 
         var label = cerealColors[c['_id']].label
         var per = Math.floor((ct / boxTotal) * 100)
-        var li = $('<li data-id="' + c['_id'] + '"><span class="title">' + label + '</span><span class="value">' + ct + '</span><span class="per">' + per + '%</span></li>')
-        li.on('mouseover', $.proxy(onTableMouseover,this));
-        li.on('mouseout', $.proxy(onTableMouseout,this));
+        var li = $('<a href="https://twitter.com/search?f=tweets&vertical=default&q=' + label + '"><li data-id="' + c['_id'] + '"><span class="title">' + label + '</span><span class="value">' + ct + '</span><span class="per">' + per + '%</span></li></a>')
+        li.on('mouseover', $.proxy(onTableMouseover, this))
+        li.on('mouseout', $.proxy(onTableMouseout, this))
         $('#leaderboard ul').append(li)
       }
       hasInit = true
@@ -350,31 +372,30 @@ function connectToSocket () {
   })
 }
 
-function onTableMouseover(e) {
-  //console.log('onTableMouseover',$(e.currentTarget).data('id'))
+function onTableMouseover (e) {
+  // console.log('onTableMouseover',$(e.currentTarget).data('id'))
   showColumn($(e.currentTarget).data('id'))
 }
-function onTableMouseout(e) {
+function onTableMouseout (e) {
   showColumn()
 }
 
-function showColumn(id) {
-  if(id) {
-    for(var i in cereals) {
+function showColumn (id) {
+  if (id) {
+    for (var i in cereals) {
       if (i != id) {
-        var columns = cereals[i].columns;
-        for(var j=0; j < columns.length; j++) {
-          columns[j].visible = false;
-
+        var columns = cereals[i].columns
+        for (var j = 0; j < columns.length; j++) {
+          columns[j].visible = false
         }
       }
     }
   } else {
-    for(var i in cereals) {
-        var columns = cereals[i].columns;
-        for(var j=0; j < columns.length; j++) {
-          columns[j].visible = true;
-        }
+    for (var i in cereals) {
+      var columns = cereals[i].columns
+      for (var j = 0; j < columns.length; j++) {
+        columns[j].visible = true
+      }
     }
   }
 }

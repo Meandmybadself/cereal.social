@@ -226,6 +226,19 @@ html, body {
     html #gui #leaderboard ul, body #gui #leaderboard ul {
       list-style: none;
       padding: 0; }
+      html #gui #leaderboard ul a, body #gui #leaderboard ul a {
+        text-decoration: none;
+        padding: 0;
+        margin: 0;
+        color: #222; }
+        html #gui #leaderboard ul a:hover, body #gui #leaderboard ul a:hover {
+          color: red; }
+          html #gui #leaderboard ul a:hover li, body #gui #leaderboard ul a:hover li {
+            border-color: red; }
+        html #gui #leaderboard ul a:not(:last-child) li, body #gui #leaderboard ul a:not(:last-child) li {
+          border-bottom: 1px solid #CCC; }
+        html #gui #leaderboard ul a:last-child, body #gui #leaderboard ul a:last-child {
+          margin-bottom: 10px; }
       html #gui #leaderboard ul li, body #gui #leaderboard ul li {
         pointer-events: all;
         cursor: pointer;
@@ -236,10 +249,6 @@ html, body {
           animation: blinkGreen 10s infinite; }
         html #gui #leaderboard ul li.down, body #gui #leaderboard ul li.down {
           animation: blinkRed 10s infinite; }
-        html #gui #leaderboard ul li:not(:last-child), body #gui #leaderboard ul li:not(:last-child) {
-          border-bottom: 1px solid #CCC; }
-        html #gui #leaderboard ul li:last-child, body #gui #leaderboard ul li:last-child {
-          margin-bottom: 10px; }
         html #gui #leaderboard ul li span, body #gui #leaderboard ul li span {
           font-family: "HelveticaNeue", "Helvetica Neue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
           font-weight: 400;

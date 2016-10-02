@@ -38,6 +38,21 @@ mongoose.connect('mongodb://127.0.0.1/cereals', {
 let socketServer = io(2052)
 socketServer.on('connection', (socket) => {
   emitState(socket)
+  socket.on('details', (obj) => {
+  //  console.log('details',obj)
+    var cerealId = obj.cereal
+    var index = obj.index - 1
+    Cereal.find({cereal:cerealId},null, {skip:index, limit:1})
+      .then((rsp) => {
+          rsp = rsp[0]
+          delete rsp['_id']
+          delete rsp['__v']
+          socket.emit('details', rsp)
+      })
+      .catch((e) => {
+        console.log("Error when querying details.", e)
+      })
+  })
 })
 
 setTimeout(function () {

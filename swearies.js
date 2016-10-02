@@ -2,6 +2,8 @@ var c =
 {
   "description": "Common expletives and spelling variants used in internet comments.",
   "expletives": {
+    "fucking":1,
+    "nigga":1,
     "ahole":1,
     "fuck":1,
     "dickface":1,
