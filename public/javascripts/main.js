@@ -10,6 +10,7 @@ var domEvents
 var useShadows = false
 var boxTotal = 0
 var examMode = document.location.hash === '#exam'
+var isMousedOver
 
 var BOX_SCALE = 1
 var BOX_WIDTH = 14 * BOX_SCALE
@@ -223,9 +224,11 @@ function onBoxMouseover (e) {
   var index = getCerealStackCount(id) - parseInt(name[1],10)
 
   socket.emit('details', {cereal: id, index: index})
+  isMousedOver = true
 
 }
 function onBoxMouseout (e) {
+  isMousedOver = false
 }
 
 function removeBoxes (id, count) {
@@ -446,7 +449,7 @@ function onResize () {
 
 function frameUpdate () {
   var r = rad2deg(world.rotation.y) + 0.4
-  if (!examMode) {
+  if (!examMode || !isMousedOver) {
     world.rotation.y = deg2rad(r)
   }
 }
