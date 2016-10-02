@@ -106,7 +106,6 @@ function getPosition (index) {
 }
 
 function getBox (id) {
-
   var box = new THREE.BoxBufferGeometry(BOX_WIDTH, BOX_HEIGHT, BOX_DEPTH, 1, 1, 1)
   var mat = getMat(id)
   var mesh = new THREE.Mesh(box, mat)
@@ -116,9 +115,8 @@ function getBox (id) {
   return mesh
 }
 
-function getMat(id) {
-
-  if(!cerealColors[id].mat) {
+function getMat (id) {
+  if (!cerealColors[id].mat) {
     var textureLoader = new THREE.TextureLoader()
     var texPath = '/assets/images/textures/cereals/' + id + '.jpg'
     var color = cerealColors[id].color
@@ -135,9 +133,9 @@ function getMat(id) {
       flatMat
     ])
 
-    cerealColors[id].mat = mat;
+    cerealColors[id].mat = mat
   }
-  return cerealColors[id].mat;
+  return cerealColors[id].mat
 }
 
 $(function () {
@@ -188,8 +186,6 @@ function getTallestColumn (id) {
   return mostCol
 }
 
-
-
 function addBoxes (id, count) {
   var mesh = getBox(id)
 
@@ -204,9 +200,8 @@ function addBoxes (id, count) {
     TweenMax.from(m.position, 0.5, {y: 200,ease: Quad.easeOut})
     TweenMax.from(m.rotation, 0.5, {x: deg2rad(5),ease: Quad.easeOut})
 
-    domEvents.addEventListener(m,'mouseover',$.proxy(onBoxMouseover, this));
-    domEvents.addEventListener(m,'mouseout',$.proxy(onBoxMouseout, this));
-
+    //domEvents.addEventListener(m, 'mouseover', $.proxy(onBoxMouseover, this))
+    //domEvents.addEventListener(m, 'mouseout', $.proxy(onBoxMouseout, this))
   }
 }
 
@@ -214,13 +209,12 @@ function onBoxMouseover (e) {
   console.log('onBoxMouseover', e)
 }
 function onBoxMouseout (e) {
-
 }
 
 function removeBoxes (id, count) {
-  console.log('removeBoxes',id,count)
+  console.log('removeBoxes', id, count)
   var col = getTallestColumn(id)
-  TweenMax.to(col, 0.3, {y:(-BOX_DEPTH * BOX_SCALE) * count})//, onComplete:onBoxesRemoved, onCompleteParams:[id,count]})
+  TweenMax.to(col, 0.3, {y: (-BOX_DEPTH * BOX_SCALE) * count}) // , onComplete:onBoxesRemoved, onCompleteParams:[id,count]})
 }
 
 // function onBoxesRemoved(id,count) {
@@ -235,10 +229,10 @@ function updateTable (id, count) {
 
 function createTweet (t) {
   var d = moment(new Date(t.date)).format('h:mm:ss')
-  var li = $("<li class='tweet'><dl><dt><table cellspacing='0'><tr><td><a href='https://twitter.com/" + t.screenname + "' target='_blank'>" + t.screenname + "</a></td><td>" + d + "</td></tr></table></dt><dd><div><a href='https://twitter.com/statuses/" + t.id + "' target='_blank'>" + t.text + '</a></div><div><img class="cereal" src="/assets/images/textures/cereals/' + t.cereal + '.jpg" alt="' + t.cereal + '"/></div></dd></dl></li>')
+  var li = $("<li class='tweet'><dl><dt><table cellspacing='0'><tr><td><a href='https://twitter.com/" + t.screenname + "' target='_blank'>" + t.screenname + '</a></td><td>' + d + "</td></tr></table></dt><dd><div><a href='https://twitter.com/statuses/" + t.id + "' target='_blank'>" + t.text + '</a></div><div><img class="cereal" src="/assets/images/textures/cereals/' + t.cereal + '.jpg" alt="' + t.cereal + '"/></div></dd></dl></li>')
   $('#tweets').append(li)
   if ($('#tweets').children().length > 4) {
-    $('#tweets .tweet:last-child').remove();
+    $('#tweets .tweet:last-child').remove()
   }
 }
 
@@ -250,11 +244,11 @@ function connectToSocket () {
   }
 
   socket.on('connect', function () {
-    //console.log('connected')
+    // console.log('connected')
   })
 
   socket.on('update', function (tweet) {
-    //console.log('update', tweet)
+    // console.log('update', tweet)
     // What cereal are we attributing this to?
     var cId = tweet.cereal
     var cObj = cereals[cId]
@@ -325,6 +319,8 @@ function connectToSocket () {
         var label = cerealColors[c['_id']].label
         var per = Math.floor((ct / boxTotal) * 100)
         var li = $('<li data-id="' + c['_id'] + '"><span class="title">' + label + '</span><span class="value">' + ct + '</span><span class="per">' + per + '%</span></li>')
+        li.on('mouseover', $.proxy(onTableMouseover,this));
+        li.on('mouseout', $.proxy(onTableMouseout,this));
         $('#leaderboard ul').append(li)
       }
       hasInit = true
@@ -354,6 +350,43 @@ function connectToSocket () {
   })
 }
 
+function onTableMouseover(e) {
+  //console.log('onTableMouseover',$(e.currentTarget).data('id'))
+  showColumn($(e.currentTarget).data('id'))
+}
+function onTableMouseout(e) {
+  showColumn()
+}
+
+function showColumn(id) {
+  if(id) {
+    for(var i in cereals) {
+      if (i != id) {
+        var columns = cereals[i].columns;
+        for(var j=0; j < columns.length; j++) {
+          var colKids = columns[j].children
+          console.log(id,colKids)
+          for(var k=0; k< colKids.length; k++) {
+            var o3d = colKids[k];
+            o3d.visible = false;
+          }
+        }
+      }
+    }
+  } else {
+    for(var i in cereals) {
+        var columns = cereals[i].columns;
+        for(var j=0; j < columns.length; j++) {
+          var colKids = columns[j].children
+          for(var k=0; k< colKids.length; k++) {
+            var o3d = colKids[k];
+            o3d.visible = true;
+          }
+        }
+    }
+  }
+}
+
 function setup3d () {
   scene = new THREE.Scene()
   camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1200)
@@ -367,14 +400,13 @@ function setup3d () {
   renderer = new THREE.WebGLRenderer({
     antialias: true
   })
-  renderer.shadowMapEnabled = useShadows
+  renderer.shadowMap.enabled = useShadows
   renderer.setClearColor(0x111111)
   renderer.setSize(window.innerWidth, window.innerHeight)
 
   if (examMode) {
     var orbit = new THREE.OrbitControls(camera, renderer.domElement)
     orbit.enableZoom = true
-    //$('#gui').css('display','none')
   }
 
   domEvents = new THREEx.DomEvents(camera, renderer.domElement)

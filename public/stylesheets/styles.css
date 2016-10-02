@@ -8,7 +8,7 @@ html, body {
   html canvas, body canvas {
     width: 100vw;
     height: 100vh; }
-  @media screen and (max-width: 1000px) {
+  @media screen and (max-width: 950px) {
     html body, body body {
       display: flex;
       flex-direction: column-reverse; }
@@ -228,6 +228,7 @@ html, body {
       padding: 0; }
       html #gui #leaderboard ul li, body #gui #leaderboard ul li {
         pointer-events: all;
+        cursor: pointer;
         padding: 0; }
         html #gui #leaderboard ul li.up, body #gui #leaderboard ul li.up {
           -moz-animation: blinkGreen 10s infinite;

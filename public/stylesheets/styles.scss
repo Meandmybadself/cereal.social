@@ -12,7 +12,7 @@ html,body {
   }
 
   body {
-    @media screen and (max-width:1000px) {
+    @media screen and (max-width:950px) {
       display:flex;
       flex-direction: column-reverse;
 
@@ -286,6 +286,7 @@ html,body {
 
         li {
           pointer-events: all;
+          cursor: pointer;
           padding:0;
 
           &.up {
