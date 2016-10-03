@@ -10,7 +10,7 @@ var domEvents
 var useShadows = false
 var boxTotal = 0
 var examMode = document.location.hash === '#exam'
-var isMousedOver
+var isMousedOver = false
 
 var BOX_SCALE = 1
 var BOX_WIDTH = 14 * BOX_SCALE
@@ -207,7 +207,6 @@ function addBoxes (id, count) {
 }
 
 function getCerealStackCount (id) {
-  console.log(id)
   var cols = cereals[id].columns
   var colCt = cols.length
   var ct = 0
@@ -231,6 +230,10 @@ function onBoxMouseout (e) {
   isMousedOver = false
 }
 
+function showTweet(t) {
+
+}
+
 function removeBoxes (id, count) {
   console.log('removeBoxes', id, count)
   var col = getTallestColumn(id)
@@ -246,6 +249,8 @@ function updateTable (id, count) {
   li.find('span.value').text(count)
   li.find('span.per').text(Math.floor((count / boxTotal) * 100) + '%')
 }
+
+
 
 function createTweet (t) {
   var d = moment(new Date(t.date)).format('h:mm:ss')
@@ -265,7 +270,8 @@ function connectToSocket () {
   }
 
   socket.on('details', function(t) {
-      createTweet(t)
+    showTweet(t)
+      //createTweet(t)
   })
 
   socket.on('connect', function () {
@@ -277,6 +283,9 @@ function connectToSocket () {
     // What cereal are we attributing this to?
     var cId = tweet.cereal
     var cObj = cereals[cId]
+    if (!cObj || !cObj.count) {
+      console.log('Need to add – ', cId)
+    }
     cObj.count++
 
     createTweet(tweet)
@@ -455,6 +464,8 @@ function frameUpdate () {
   var r = rad2deg(world.rotation.y) + 0.4
   if (!isMousedOver) {
     world.rotation.y = deg2rad(r)
+  } else {
+    world.rotation.y = world.rotation.y;
   }
 }
 
