@@ -35,8 +35,11 @@ var order = [
 ]
 
 var cerealColors = {
-  'corn-chex': {color: 0x2B7E38, label: 'Corn Chex'},
-  'multi-grain-cheerios': {color: 0xFF0000, label: 'Multi-Grain Cheerios'},
+  'cracklin-oat-bran': {color: 0x1E5395, label: 'Cracklin\' Oat Bran'},
+  'honey-bunches-of-oats': {color: 0xFEFEFE, label: 'Honey Bunches of Oats'},
+  'obama-os': {color: 0x60A6E2, label: 'Obama O\'s'},
+  'urkel-os': {color: 0xE0EDF3, label: 'Urkel O\'s'},
+  'multi-grain-cheerios': {color: 0xF0E8F3, label: 'Multi-Grain Cheerios'},
   'alpha-bits': {color: 0x0F4DA3, label: 'Alpha-Bits'},
   'cinnamon-chex': {color: 0xB51017, label: 'Cinnamon Chex'},
   'mini-wheats': {color: 0xFA974A, label: 'Mini-Wheats'},
@@ -75,7 +78,7 @@ var cerealColors = {
   'frosted-cheerios': {color: 0x0070B8, label: 'Frosted Cheerios'},
   'cheerios': {color: 0xFCCC03, label: 'Cheerios'},
   'cinnamon-toast-crunch': {color: 0xFFFFFF, label: 'Cinnamon Toast Crunch'},
-  'fruity-pebbles': {color: 0xFF0000, label: 'Fruity Pebbles'},
+  'fruity-pebbles': {color: 0xE2262C, label: 'Fruity Pebbles'},
   'cocoa-puffs': {color: 0x441413, label: 'Cocoa Puffs'}
 }
 
