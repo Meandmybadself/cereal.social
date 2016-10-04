@@ -12,6 +12,8 @@ var c =
     "hitlery":1,
     "pinksock":1,
     "dirtysanchez":1,
+    "cumshots":1,
+    "porn":1,
     "dirty-sanchez":1,
     "cocks":1,
     "fuckn":1,
