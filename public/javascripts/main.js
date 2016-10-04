@@ -37,8 +37,8 @@ var order = [
 var cerealColors = {
   'cracklin-oat-bran': {color: 0x1E5395, label: 'Cracklin\' Oat Bran'},
   'honey-bunches-of-oats': {color: 0xFEFEFE, label: 'Honey Bunches of Oats'},
-  'obama-os': {color: 0x60A6E2, label: 'Obama O\'s'},
-  'urkel-os': {color: 0xE0EDF3, label: 'Urkel O\'s'},
+  'obama-os': {color: 0x60A6E2, label: 'Obama Os'},
+  'urkel-os': {color: 0xE0EDF3, label: 'Urkel Os'},
   'multi-grain-cheerios': {color: 0xF0E8F3, label: 'Multi-Grain Cheerios'},
   'alpha-bits': {color: 0x0F4DA3, label: 'Alpha-Bits'},
   'cinnamon-chex': {color: 0xB51017, label: 'Cinnamon Chex'},
