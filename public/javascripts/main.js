@@ -312,7 +312,7 @@ function connectToSocket () {
       if (data.total > 500) {
         boxScale = 0.8
       } else {
-        boxScale = 1
+        boxScale = 1.2
       }
 
       cereals = {}
@@ -360,7 +360,6 @@ function connectToSocket () {
         }
 
         cereals[c['_id']] = {columns: cols, count: 0}
-        console.log(c['_id'],cerealColors[c['_id']])
         var label = cerealColors[c['_id']].label
         var per = Math.floor((ct / boxTotal) * 100)
         var li = $('<a data-id="' + c['_id'] + '" href="https://twitter.com/search?f=tweets&vertical=default&q=' + label + '"><li><span class="title">' + label + '</span><span class="value">' + ct + '</span><span class="per">' + per + '%</span></li></a>')
