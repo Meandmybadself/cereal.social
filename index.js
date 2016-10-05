@@ -60,7 +60,7 @@ setTimeout(function () {
 }, 20000)
 
 function emitState (socket) {
-  const PAST_HOURS = 4
+  const PAST_HOURS = 3
   const OLDEST_POST = moment().subtract(PAST_HOURS, 'hours').toDate()
 
   Cereal.aggregate(
