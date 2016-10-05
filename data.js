@@ -45,6 +45,7 @@ module.exports = {
     {'id': 'rice-chex', 'label': 'Rice Chex'},
     {'id': 'cheerios', 'label': 'Cheerios'},
     {'id': 'all-bran', 'label': 'All-Bran'},
+    {'id': 'all-bran', 'label': 'All Bran'},
     {'id': 'wheaties', 'label': 'Wheaties'},
     {'id': 'crispix', 'label': 'Crispix'},
     {'id': 'smorz', 'label': 'Smorz'},

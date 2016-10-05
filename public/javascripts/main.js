@@ -11,11 +11,12 @@ var useShadows = false
 var boxTotal = 0
 var examMode = document.location.hash === '#exam'
 var isMousedOver = false
+var boxScale = .9
 
-var BOX_SCALE = .9
-var BOX_WIDTH = 14 * BOX_SCALE
-var BOX_HEIGHT = 18 * BOX_SCALE
-var BOX_DEPTH = 3 * BOX_SCALE
+//var BOX_SCALE = .9
+var BOX_WIDTH = 14 // * BOX_SCALE
+var BOX_HEIGHT = 18 // * BOX_SCALE
+var BOX_DEPTH = 3 // * BOX_SCALE
 
 var GAP = 0.5
 
@@ -92,17 +93,17 @@ function deg2rad (degrees) {
 
 function getPosition (index) {
   var orderLen = order.length
-  var startX = (order[0].length * BOX_WIDTH) + (GAP * order[0].length - 1) - 10
-  var startY = (order.length * BOX_HEIGHT) + (GAP * order.length - 1)
+  var startX = (order[0].length * BOX_WIDTH * boxScale) + (GAP * order[0].length - 1) - 10
+  var startY = (order.length * BOX_HEIGHT * boxScale) + (GAP * order.length - 1)
 
   index++
 
   for (var row = 0; row < orderLen; row++) {
     for (var col = 0; col < order[row].length; col++) {
       if (order[row][col] === index) {
-        var x = -(startX / 2) + (BOX_WIDTH * col) + (GAP * col)
-        var y = (BOX_DEPTH * 0.5) + (TABLE_HEIGHT * 0.5)
-        var z = -(startY / 2) + (BOX_HEIGHT * row) + (GAP * row)
+        var x = -(startX / 2) + (BOX_WIDTH * boxScale * col) + (GAP * col)
+        var y = (BOX_DEPTH * boxScale * 0.5) + (TABLE_HEIGHT * 0.5)
+        var z = -(startY / 2) + (BOX_HEIGHT * boxScale* row) + (GAP * row)
         // console.log(index,x,y,z)
         return new THREE.Vector3(x, y, z)
       }
@@ -111,7 +112,7 @@ function getPosition (index) {
 }
 
 function getBox (id) {
-  var box = new THREE.BoxBufferGeometry(BOX_WIDTH, BOX_HEIGHT, BOX_DEPTH, 1, 1, 1)
+  var box = new THREE.BoxBufferGeometry(BOX_WIDTH * boxScale, BOX_HEIGHT * boxScale, BOX_DEPTH * boxScale,  1, 1, 1)
   var mat = getMat(id)
   var mesh = new THREE.Mesh(box, mat)
   mesh.castShadow = useShadows
@@ -275,7 +276,6 @@ function connectToSocket () {
 
   socket.on('details', function(t) {
     showTweet(t)
-      //createTweet(t)
   })
 
   socket.on('connect', function () {
@@ -305,8 +305,15 @@ function connectToSocket () {
     boxTotal = data.total
 
     if (!hasInit) {
+
       // Build the columns.
       var index = 0
+
+      if (data.total > 500) {
+        boxScale = 0.8
+      } else {
+        boxScale = 1
+      }
 
       cereals = {}
       ll = data.rsp.length
