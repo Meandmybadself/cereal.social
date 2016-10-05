@@ -12,7 +12,7 @@ var boxTotal = 0
 var examMode = document.location.hash === '#exam'
 var isMousedOver = false
 
-var BOX_SCALE = .8
+var BOX_SCALE = .9
 var BOX_WIDTH = 14 * BOX_SCALE
 var BOX_HEIGHT = 18 * BOX_SCALE
 var BOX_DEPTH = 3 * BOX_SCALE
@@ -299,7 +299,7 @@ function connectToSocket () {
   })
 
   socket.on('state', function (data) {
-    //console.log('state', data)
+    console.log('state', data)
 
     var ll
     boxTotal = data.total
