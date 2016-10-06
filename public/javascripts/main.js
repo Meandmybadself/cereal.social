@@ -310,7 +310,7 @@ function connectToSocket () {
       var index = 0
 
       if (data.total > 2000) {
-        boxScale = 0.5
+        boxScale = 0.7
       } else if (data.total > 500) {
         boxScale = 0.8
       } else {
