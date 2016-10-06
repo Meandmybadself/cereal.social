@@ -310,7 +310,7 @@ function connectToSocket () {
       var index = 0
 
       if (data.total > 2000) {
-        boxScale = 0.6
+        boxScale = 0.5
       } else if (data.total > 500) {
         boxScale = 0.8
       } else {
@@ -327,7 +327,7 @@ function connectToSocket () {
         var cols = []
 
         if (ct > 1500) {
-          colCt = 40
+          colCt = 45
         } else if (ct >= 700) {
           colCt = 18
         } else if (ct >= 600) {
