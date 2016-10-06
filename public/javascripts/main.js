@@ -325,7 +325,7 @@ function connectToSocket () {
         var cols = []
 
         if (ct > 1500) {
-          colCt = 30
+          colCt = 36
         } else if (ct >= 700) {
           colCt = 18
         } else if (ct >= 600) {
