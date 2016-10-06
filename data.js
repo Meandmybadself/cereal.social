@@ -27,8 +27,6 @@ module.exports = {
     {'id': 'capn-crunch', 'label': "Cap'n Crunch"},
     {'id': 'urkel-os', 'label': "Urkel Os"},
     {'id': 'urkel-os', 'label': "Urkel O's"},
-    {'id': 'obama-os', 'label': "Obama Os"},
-    {'id': 'obama-os', 'label': "Obama O's"},
     {'id': 'honey-smacks', 'label': 'Honey Smacks'},
     {'id': 'mini-wheats', 'label': 'Mini-Wheats'},
     {'id': 'cocoa-puffs', 'label': 'Cocoa Puffs'},
