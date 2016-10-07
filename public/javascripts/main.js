@@ -312,7 +312,7 @@ function connectToSocket () {
       if (data.total > 2000) {
         boxScale = 0.7
       } else if (data.total > 500) {
-        boxScale = 0.8
+        boxScale = 0.9
       } else {
         boxScale = 1.2
       }
