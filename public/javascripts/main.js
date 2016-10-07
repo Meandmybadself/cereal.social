@@ -199,7 +199,7 @@ function addBoxes (id, count) {
     var m = mesh.clone()
     var col = getShortestColumn(id)
     var kidsLen = col.children.length
-    m.position.y = kidsLen * BOX_DEPTH
+    m.position.y = kidsLen * BOX_DEPTH * boxScale
     m.rotation.z = deg2rad(randomBetween(-3, 3))
     m.name = id + '_' + getCerealStackCount(id)
     col.add(m)
