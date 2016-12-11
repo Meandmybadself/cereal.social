@@ -405,9 +405,8 @@ function buildColumns (data) {
 
       // add box shadow.
       var geometry = new THREE.PlaneBufferGeometry(BOX_WIDTH * boxScale, BOX_HEIGHT * boxScale, 10)
-      var material = new THREE.MeshBasicMaterial({color: 0x592e24})
-      //material.transparent = true
-      //material.opacity = .3
+      var material = new THREE.MeshBasicMaterial({color: 0x402620})
+
       var shadow = new THREE.Mesh(geometry, material)
       shadow.scale.x = shadow.scale.y = 1.15
       shadow.rotation.x = deg2rad(-90)
