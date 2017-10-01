@@ -146,7 +146,7 @@ function initTwitter () {
     .on('tweet', (e) => {
       console.log(e.text)
       if (hasSwearies(e.text)) {
-        console.log("Stopping due to swearies", e.text);
+        // console.log("Stopping due to swearies", e.text);
         return
       }
       let cerealId = getCerealForText(e.text)
