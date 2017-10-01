@@ -13,7 +13,7 @@ var examMode = document.location.hash === '#exam'
 var isMousedOver = false
 var boxScale = .9
 
-//var BOX_SCALE = .9
+// var BOX_SCALE = .9
 var BOX_WIDTH = 14 // * BOX_SCALE
 var BOX_HEIGHT = 18 // * BOX_SCALE
 var BOX_DEPTH = 3 // * BOX_SCALE
@@ -36,10 +36,10 @@ var order = [
 ]
 
 var cerealColors = {
-  'cracklin-oat-bran': {color: 0x1E5395, label: 'Cracklin\' Oat Bran'},
+  'cracklin-oat-bran': {color: 0x1E5395, label: "Cracklin' Oat Bran"},
   'honey-bunches-of-oats': {color: 0xFEFEFE, label: 'Honey Bunches of Oats'},
-  'obama-os': {color: 0x60A6E2, label: 'Obama O\'s'},
-  'urkel-os': {color: 0xE0EDF3, label: 'Urkel O\'s'},
+  'obama-os': {color: 0x60A6E2, label: "Obama O's"},
+  'urkel-os': {color: 0xE0EDF3, label: "Urkel O's"},
   'multi-grain-cheerios': {color: 0xF0E8F3, label: 'Multi-Grain Cheerios'},
   'alpha-bits': {color: 0x0F4DA3, label: 'Alpha-Bits'},
   'cinnamon-chex': {color: 0xB51017, label: 'Cinnamon Chex'},
@@ -103,7 +103,7 @@ function getPosition (index) {
       if (order[row][col] === index) {
         var x = -(startX / 2) + (BOX_WIDTH * boxScale * col) + (GAP * col)
         var y = (BOX_DEPTH * boxScale * 0.5) + (TABLE_HEIGHT * 0.5)
-        var z = -(startY / 2) + (BOX_HEIGHT * boxScale* row) + (GAP * row)
+        var z = -(startY / 2) + (BOX_HEIGHT * boxScale * row) + (GAP * row)
         // console.log(index,x,y,z)
         return new THREE.Vector3(x, y, z)
       }
@@ -112,7 +112,7 @@ function getPosition (index) {
 }
 
 function getBox (id) {
-  var box = new THREE.BoxBufferGeometry(BOX_WIDTH * boxScale, BOX_HEIGHT * boxScale, BOX_DEPTH * boxScale,  1, 1, 1)
+  var box = new THREE.BoxBufferGeometry(BOX_WIDTH * boxScale, BOX_HEIGHT * boxScale, BOX_DEPTH * boxScale, 1, 1, 1)
   var mat = getMat(id)
   var mesh = new THREE.Mesh(box, mat)
   mesh.castShadow = useShadows
@@ -206,8 +206,8 @@ function addBoxes (id, count) {
     TweenMax.from(m.position, 0.5, {y: 200,ease: Quad.easeOut})
     TweenMax.from(m.rotation, 0.5, {x: deg2rad(5),ease: Quad.easeOut})
 
-    //domEvents.addEventListener(m, 'mouseover', $.proxy(onBoxMouseover, this))
-    //domEvents.addEventListener(m, 'mouseout', $.proxy(onBoxMouseout, this))
+  // domEvents.addEventListener(m, 'mouseover', $.proxy(onBoxMouseover, this))
+  // domEvents.addEventListener(m, 'mouseout', $.proxy(onBoxMouseout, this))
   }
 }
 
@@ -225,18 +225,16 @@ function onBoxMouseover (e) {
   var name = e.target.name.split('_')
   var id = name[0]
 
-  var index = getCerealStackCount(id) - parseInt(name[1],10)
+  var index = getCerealStackCount(id) - parseInt(name[1], 10)
 
   socket.emit('details', {cereal: id, index: index})
   isMousedOver = true
-
 }
 function onBoxMouseout (e) {
   isMousedOver = false
 }
 
-function showTweet(t) {
-
+function showTweet (t) {
 }
 
 function removeBoxes (id, count) {
@@ -255,8 +253,6 @@ function updateTable (id, count) {
   li.find('span.per').text(Math.floor((count / boxTotal) * 100) + '%')
 }
 
-
-
 function createTweet (t) {
   var d = moment(new Date(t.date)).format('h:mm:ss')
   var li = $("<li class='tweet'><dl><dt><table cellspacing='0'><tr><td><a href='https://twitter.com/" + t.screenname + "' target='_blank'>" + t.screenname + '</a></td><td>' + d + "</td></tr></table></dt><dd><div><a href='https://twitter.com/statuses/" + t.id + "' target='_blank'>" + t.text + '</a></div><div><img class="cereal" src="/assets/images/textures/cereals/' + t.cereal + '.jpg" alt="' + t.cereal + '"/></div></dd></dl></li>')
@@ -274,7 +270,7 @@ function connectToSocket () {
     socket = io.connect()
   }
 
-  socket.on('details', function(t) {
+  socket.on('details', function (t) {
     showTweet(t)
   })
 
@@ -305,72 +301,9 @@ function connectToSocket () {
     boxTotal = data.total
 
     if (!hasInit) {
+      buildColumns(data)
+      buildCerealList(data)
 
-      // Build the columns.
-      var index = 0
-
-      if (data.total > 2000) {
-        boxScale = 0.7
-      } else if (data.total > 500) {
-        boxScale = 0.9
-      } else {
-        boxScale = 1.2
-      }
-
-      cereals = {}
-      ll = data.rsp.length
-
-      for (var d = 0; d < ll; d++) {
-        var c = data.rsp[d]
-        var ct = c.count
-        var colCt = 1
-        var cols = []
-
-        if (ct > 1500) {
-          colCt = 50
-        } else if (ct >= 700) {
-          colCt = 18
-        } else if (ct >= 600) {
-          colCt = 17
-        } else if (ct >= 500) {
-          colCt = 16
-        } else if (ct >= 400) {
-          colCt = 15
-        } else if (ct >= 300) {
-          colCt = 7
-        } else if (ct >= 200) {
-          colCt = 6
-        } else if (ct >= 100) {
-          colCt = 4
-        } else if (ct >= 40) {
-          colCt = 3
-        } else if (ct >= 25) {
-          colCt = 2
-        }
-
-        for (var i = 0; i < colCt; i++) {
-          var do3d = new THREE.Object3D()
-          var p = getPosition(index++)
-          do3d.position.x = p.x
-          do3d.position.y = p.y
-          do3d.position.z = p.z
-
-          if (do3d.position.z > 0) {
-            do3d.rotation.y = deg2rad(180)
-          }
-
-          cols.push(do3d)
-          world.add(do3d)
-        }
-
-        cereals[c['_id']] = {columns: cols, count: 0}
-        var label = cerealColors[c['_id']].label
-        var per = Math.floor((ct / boxTotal) * 100)
-        var li = $('<a data-id="' + c['_id'] + '" href="https://twitter.com/search?f=tweets&vertical=default&q=' + label + '"><li><span class="title">' + label + '</span><span class="value">' + ct + '</span><span class="per">' + per + '%</span></li></a>')
-        li.on('mouseover', $.proxy(onTableMouseover, this))
-        li.on('mouseout', $.proxy(onTableMouseout, this))
-        $('#leaderboard ul').append(li)
-      }
       hasInit = true
       setTimeout(function () {
         $('canvas, #gui').addClass('active')
@@ -398,8 +331,94 @@ function connectToSocket () {
   })
 }
 
+function buildCerealList (data) {
+  ll = data.rsp.length
+
+  for (var d = 0; d < ll; d++) {
+    var c = data.rsp[d]
+    var ct = c.count
+    var label = cerealColors[c['_id']].label
+    var per = Math.floor((ct / boxTotal) * 100)
+    var li = $('<a data-id="' + c['_id'] + '" href="https://twitter.com/search?f=tweets&vertical=default&q=' + label + '"><li><span class="title">' + label + '</span><span class="value">' + ct + '</span><span class="per">' + per + '%</span></li></a>')
+    li.on('mouseover', $.proxy(onTableMouseover, this))
+    li.on('mouseout', $.proxy(onTableMouseout, this))
+    $('#leaderboard ul').append(li)
+  }
+}
+
+function buildColumns (data) {
+  // Build the column containers for each cereal box type
+  var index = 0
+
+  if (data.total > 2000) {
+    boxScale = 0.7
+  } else if (data.total > 500) {
+    boxScale = 0.9
+  } else {
+    boxScale = 1.2
+  }
+
+  cereals = {}
+  ll = data.rsp.length
+
+  for (var d = 0; d < ll; d++) {
+    var c = data.rsp[d]
+    var ct = c.count
+    var colCt = 1
+    var cols = []
+
+    if (ct > 1500) {
+      colCt = 50
+    } else if (ct >= 700) {
+      colCt = 18
+    } else if (ct >= 600) {
+      colCt = 17
+    } else if (ct >= 500) {
+      colCt = 16
+    } else if (ct >= 400) {
+      colCt = 15
+    } else if (ct >= 300) {
+      colCt = 7
+    } else if (ct >= 200) {
+      colCt = 6
+    } else if (ct >= 100) {
+      colCt = 4
+    } else if (ct >= 40) {
+      colCt = 3
+    } else if (ct >= 25) {
+      colCt = 2
+    }
+
+    for (var i = 0; i < colCt; i++) {
+      var do3d = new THREE.Object3D()
+      var p = getPosition(index++)
+      do3d.position.x = p.x
+      do3d.position.y = p.y
+      do3d.position.z = p.z
+
+      if (do3d.position.z > 0) {
+        do3d.rotation.y = deg2rad(180)
+      }
+
+      cols.push(do3d)
+      world.add(do3d)
+
+      // add box shadow.
+      var geometry = new THREE.PlaneBufferGeometry(BOX_WIDTH * boxScale, BOX_HEIGHT * boxScale, 10)
+      var material = new THREE.MeshBasicMaterial({color: 0x402620})
+
+      var shadow = new THREE.Mesh(geometry, material)
+      shadow.scale.x = shadow.scale.y = 1.15
+      shadow.rotation.x = deg2rad(-90)
+      do3d.add(shadow)
+    }
+
+    cereals[c['_id']] = {columns: cols, count: 0}
+  }
+}
+
 function onTableMouseover (e) {
-  console.log('onTableMouseover',$(e.currentTarget).data('id'))
+  console.log('onTableMouseover', $(e.currentTarget).data('id'))
   showColumn($(e.currentTarget).data('id'))
 }
 function onTableMouseout (e) {
@@ -479,7 +498,7 @@ function frameUpdate () {
   if (!isMousedOver) {
     world.rotation.y = deg2rad(r)
   } else {
-    world.rotation.y = world.rotation.y;
+    world.rotation.y = world.rotation.y
   }
 }
 

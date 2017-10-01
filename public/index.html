@@ -44,6 +44,10 @@
           Hate it? <a href='https://twitter.com/home?status=cereal.social%20is%20pretty%20awesome!' target='_blank'>Tell your enemies!</a></div>
       </div>
     </div>
+    <script src="https://cdn.ravenjs.com/3.17.0/raven.min.js" crossorigin="anonymous"></script>
+    <script>
+      Raven.config('https://4ad964c5a68b4bd2be7c267b5cc878d3@sentry.io/224620').install()
+    </script>
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <script src="javascripts/TweenMax.min.js"></script>
@@ -52,10 +56,6 @@
     <script src="javascripts/three.min.js"></script>
     <script src="javascripts/OrbitControls.js"></script>
     <script src="javascripts/ColladaLoader.js"></script>
-    <!-- <script src="javascripts/ShaderPass.js"></script>
-    <script src="javascripts/EffectComposer.js"></script>
-    <script src="javascripts/HorizontalBlurShader.js"></script>
-    <script src="javascripts/VerticalBlurShader.js"></script> -->
     <script src="javascripts/main.js"></script>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -67,5 +67,6 @@
       ga('send', 'pageview');
 
     </script>
+
   </body>
 </html>
