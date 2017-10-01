@@ -36,5 +36,5 @@ Cereal.aggregate(
   {$sort: {'count': -1}}
 )
   .exec((err, rsp) => {
-    console.log(err, rsp)
+    //console.log(err, rsp)
   })
