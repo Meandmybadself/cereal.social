@@ -122,6 +122,9 @@ function getBox (id) {
 }
 
 function getMat (id) {
+  if (!cerealColors[id]) {
+    console.log('Couldnt find texture for ' + id)
+  }
   if (!cerealColors[id].mat) {
     var textureLoader = new THREE.TextureLoader()
     var texPath = '/assets/images/textures/cereals/' + id + '.jpg'
@@ -141,7 +144,7 @@ function getMat (id) {
 
     cerealColors[id].mat = mat
   }
-  return cerealColors[id].mat
+
 }
 
 $(function () {
