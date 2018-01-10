@@ -1,11 +1,10 @@
-cat {
+{
   "name": "cereal",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "sync": "rsync -av . bb:/var/data/cereal/ --exclude .gitignore --exclude .git --exclude .git --exclude node_modules; ssh bb 'cd /var/data/cereal'; npm install",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "sync": "rsync -av . bb:/var/data/cereal/ --exclude .gitignore --exclude .git --exclude .git --exclude node_modules; ssh bb 'cd /var/data/cereal'; npm install"
   },
   "author": "",
   "license": "ISC",
