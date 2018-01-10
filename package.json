@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "sync": "rsync -av . bb:/var/data/cereal/ --exclude .gitignore --exclude .git --exclude .git --exclude node_modules; ssh bb 'cd /var/data/cereal'; npm install; pm2 restart all"
+    "sync": "rsync -av . bb:/var/data/cereal/ --exclude .gitignore --exclude .git --exclude .git --exclude node_modules; ssh bb 'cd /var/data/cereal'; npm install"
   },
   "author": "",
   "license": "ISC",
