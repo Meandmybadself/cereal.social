@@ -6,7 +6,6 @@ var io
 var socket
 var cereals
 var hasInit
-var domEvents
 var useShadows = false
 var boxTotal = 0
 var examMode = document.location.hash === '#exam'
@@ -105,7 +104,6 @@ function getPosition (index) {
         var x = -(startX / 2) + (BOX_WIDTH * boxScale * col) + (GAP * col)
         var y = (BOX_DEPTH * boxScale * 0.5) + (TABLE_HEIGHT * 0.5)
         var z = -(startY / 2) + (BOX_HEIGHT * boxScale * row) + (GAP * row)
-        // console.log(index,x,y,z)
         return new THREE.Vector3(x, y, z)
       }
     }
@@ -115,6 +113,7 @@ function getPosition (index) {
 function getBox (id) {
   var box = new THREE.BoxBufferGeometry(BOX_WIDTH * boxScale, BOX_HEIGHT * boxScale, BOX_DEPTH * boxScale, 1, 1, 1)
   var mat = getMat(id)
+  console.log('mat', id, mat)
   var mesh = new THREE.Mesh(box, mat)
   mesh.castShadow = useShadows
   mesh.rotation.x = deg2rad(90)
@@ -124,15 +123,16 @@ function getBox (id) {
 
 function getMat (id) {
   if (!cerealColors[id]) {
-    console.log('Couldnt find texture for ' + id)
+    console.log('Couldnt get material for ' + id)
+    return false
   }
   if (!cerealColors[id].mat) {
     var textureLoader = new THREE.TextureLoader()
     var texPath = '/assets/images/textures/cereals/' + id + '.jpg'
     var color = cerealColors[id].color
     var shininess = 10
-    var flatMat = new THREE.MeshPhongMaterial({ color: color, specular: color, shininess: 10, shading: THREE.FlatShading })
-    var mat = new THREE.MultiMaterial([
+    var flatMat = new THREE.MeshPhongMaterial({ color: color, specular: color, shininess: 10, flatShading: THREE.FlatShading })
+    var mat = [
       flatMat,
       flatMat,
       flatMat,
@@ -141,10 +141,10 @@ function getMat (id) {
       // flatMat,
       new THREE.MeshBasicMaterial({map: textureLoader.load(texPath)}),
       flatMat
-    ])
-
+    ]
     cerealColors[id].mat = mat
   }
+  return cerealColors[id].mat
 }
 
 $(function () {
@@ -160,12 +160,10 @@ function randomBetween (min, max) {
 }
 
 function getShortestColumn (id) {
-  // console.log('gsc',id)
   var fewestColumns = 9999
   var shortestCol
   var cols = cereals[id].columns
   var colsLen = cols.length
-  // console.log(cols,colsLen)
 
   while (colsLen--) {
     var kids = cols[colsLen].children
@@ -208,9 +206,6 @@ function addBoxes (id, count) {
     col.add(m)
     TweenMax.from(m.position, 0.5, {y: 200, ease: Quad.easeOut})
     TweenMax.from(m.rotation, 0.5, {x: deg2rad(5), ease: Quad.easeOut})
-
-  // domEvents.addEventListener(m, 'mouseover', $.proxy(onBoxMouseover, this))
-  // domEvents.addEventListener(m, 'mouseout', $.proxy(onBoxMouseout, this))
   }
 }
 
@@ -334,6 +329,7 @@ function connectToSocket () {
   })
 }
 
+// Build the cereal list on the right side.
 function buildCerealList (data) {
   ll = data.rsp.length
 
