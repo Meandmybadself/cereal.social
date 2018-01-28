@@ -144,12 +144,16 @@ function initTwitter () {
       console.log('Warning message received.', msg)
     })
     .on('tweet', (e) => {
-      // console.log(e.text)
       if (hasSwearies(e.text)) {
         // console.log("Stopping due to swearies", e.text);
         return
       }
       let cerealId = getCerealForText(e.text)
+
+      // We're talking about KIX airport in Kyoto.
+      if (cerealId === 'kix' && (e.lang === 'jp' || e.user.lang === 'jp')) {
+        return
+      }
 
       if (cerealId) {
         let obj = {

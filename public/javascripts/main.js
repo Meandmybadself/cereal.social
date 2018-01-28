@@ -138,7 +138,6 @@ function getMat (id) {
       flatMat,
       flatMat,
       flatMat,
-      // flatMat,
       new THREE.MeshBasicMaterial({map: textureLoader.load(texPath)}),
       flatMat
     ]
