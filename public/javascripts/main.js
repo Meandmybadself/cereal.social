@@ -6,12 +6,11 @@ var io
 var socket
 var cereals
 var hasInit
-var domEvents
 var useShadows = false
 var boxTotal = 0
 var examMode = document.location.hash === '#exam'
 var isMousedOver = false
-var boxScale = .9
+var boxScale = 0.9
 
 // var BOX_SCALE = .9
 var BOX_WIDTH = 14 // * BOX_SCALE
@@ -81,7 +80,8 @@ var cerealColors = {
   'cheerios': {color: 0xFCCC03, label: 'Cheerios'},
   'cinnamon-toast-crunch': {color: 0xFFFFFF, label: 'Cinnamon Toast Crunch'},
   'fruity-pebbles': {color: 0xE2262C, label: 'Fruity Pebbles'},
-  'cocoa-puffs': {color: 0x441413, label: 'Cocoa Puffs'}
+  'cocoa-puffs': {color: 0x441413, label: 'Cocoa Puffs'},
+  'yogurt-burst-cheerios': {color: 0xFFFFFF, label: 'Yogurt Burst Cheerios'}
 }
 
 function rad2deg (radians) {
@@ -104,7 +104,6 @@ function getPosition (index) {
         var x = -(startX / 2) + (BOX_WIDTH * boxScale * col) + (GAP * col)
         var y = (BOX_DEPTH * boxScale * 0.5) + (TABLE_HEIGHT * 0.5)
         var z = -(startY / 2) + (BOX_HEIGHT * boxScale * row) + (GAP * row)
-        // console.log(index,x,y,z)
         return new THREE.Vector3(x, y, z)
       }
     }
@@ -114,6 +113,7 @@ function getPosition (index) {
 function getBox (id) {
   var box = new THREE.BoxBufferGeometry(BOX_WIDTH * boxScale, BOX_HEIGHT * boxScale, BOX_DEPTH * boxScale, 1, 1, 1)
   var mat = getMat(id)
+  console.log('mat', id, mat)
   var mesh = new THREE.Mesh(box, mat)
   mesh.castShadow = useShadows
   mesh.rotation.x = deg2rad(90)
@@ -122,23 +122,25 @@ function getBox (id) {
 }
 
 function getMat (id) {
+  if (!cerealColors[id]) {
+    console.log('Couldnt get material for ' + id)
+    return false
+  }
   if (!cerealColors[id].mat) {
     var textureLoader = new THREE.TextureLoader()
     var texPath = '/assets/images/textures/cereals/' + id + '.jpg'
     var color = cerealColors[id].color
     var shininess = 10
-    var flatMat = new THREE.MeshPhongMaterial({ color: color, specular: color, shininess: 10, shading: THREE.FlatShading })
-    var mat = new THREE.MultiMaterial([
+    var flatMat = new THREE.MeshPhongMaterial({ color: color, specular: color, shininess: 10, flatShading: THREE.FlatShading })
+    var mat = [
       flatMat,
       flatMat,
       flatMat,
       flatMat,
       flatMat,
-      // flatMat,
       new THREE.MeshBasicMaterial({map: textureLoader.load(texPath)}),
       flatMat
-    ])
-
+    ]
     cerealColors[id].mat = mat
   }
   return cerealColors[id].mat
@@ -157,14 +159,12 @@ function randomBetween (min, max) {
 }
 
 function getShortestColumn (id) {
-  // console.log('gsc',id)
   var fewestColumns = 9999
   var shortestCol
   var cols = cereals[id].columns
   var colsLen = cols.length
-  // console.log(cols,colsLen)
 
-  while(colsLen--) {
+  while (colsLen--) {
     var kids = cols[colsLen].children
     var kidsLen = kids.length
     if (kidsLen < fewestColumns) {
@@ -181,7 +181,7 @@ function getTallestColumn (id) {
   var cols = cereals[id].columns
   var colsLen = cols.length
 
-  while(colsLen--) {
+  while (colsLen--) {
     var kids = cols[colsLen].children
     var kidsLen = kids.length
     if (kidsLen > mostCol) {
@@ -203,11 +203,8 @@ function addBoxes (id, count) {
     m.rotation.z = deg2rad(randomBetween(-3, 3))
     m.name = id + '_' + getCerealStackCount(id)
     col.add(m)
-    TweenMax.from(m.position, 0.5, {y: 200,ease: Quad.easeOut})
-    TweenMax.from(m.rotation, 0.5, {x: deg2rad(5),ease: Quad.easeOut})
-
-  // domEvents.addEventListener(m, 'mouseover', $.proxy(onBoxMouseover, this))
-  // domEvents.addEventListener(m, 'mouseout', $.proxy(onBoxMouseout, this))
+    TweenMax.from(m.position, 0.5, {y: 200, ease: Quad.easeOut})
+    TweenMax.from(m.rotation, 0.5, {x: deg2rad(5), ease: Quad.easeOut})
   }
 }
 
@@ -215,7 +212,7 @@ function getCerealStackCount (id) {
   var cols = cereals[id].columns
   var colCt = cols.length
   var ct = 0
-  while(colCt--) {
+  while (colCt--) {
     ct += cols[colCt].children.length
   }
   return ct
@@ -312,7 +309,7 @@ function connectToSocket () {
 
     ll = data.rsp.length
 
-    while(ll--) {
+    while (ll--) {
       var id = data.rsp[ll]['_id']
 
       var diff = data.rsp[ll].count - cereals[id].count
@@ -331,12 +328,16 @@ function connectToSocket () {
   })
 }
 
+// Build the cereal list on the right side.
 function buildCerealList (data) {
   ll = data.rsp.length
 
   for (var d = 0; d < ll; d++) {
     var c = data.rsp[d]
     var ct = c.count
+    if (!cerealColors[c['_id']]) {
+      console.log('Missing cereal id', c)
+    }
     var label = cerealColors[c['_id']].label
     var per = Math.floor((ct / boxTotal) * 100)
     var li = $('<a data-id="' + c['_id'] + '" href="https://twitter.com/search?f=tweets&vertical=default&q=' + label + '"><li><span class="title">' + label + '</span><span class="value">' + ct + '</span><span class="per">' + per + '%</span></li></a>')
@@ -556,7 +557,7 @@ function setGroupMaterial (dae, arr, col, isShiny) {
   } else {
     mat = new THREE.MeshPhongMaterial({color: col})
   }
-  while(ll--) {
+  while (ll--) {
     var obj = dae.getObjectByName(arr[ll])
     if (obj) {
       obj.children[0].material = mat
