@@ -113,7 +113,6 @@ function getPosition (index) {
 function getBox (id) {
   var box = new THREE.BoxBufferGeometry(BOX_WIDTH * boxScale, BOX_HEIGHT * boxScale, BOX_DEPTH * boxScale, 1, 1, 1)
   var mat = getMat(id)
-  console.log('mat', id, mat)
   var mesh = new THREE.Mesh(box, mat)
   mesh.castShadow = useShadows
   mesh.rotation.x = deg2rad(90)
@@ -255,7 +254,6 @@ function createTweet (t) {
   var li = $("<li class='tweet'><dl><dt><table cellspacing='0'><tr><td><a href='https://twitter.com/" + t.screenname + "' target='_blank'>" + t.screenname + '</a></td><td>' + d + "</td></tr></table></dt><dd><div><a href='https://twitter.com/statuses/" + t.id + "' target='_blank'>" + t.text + '</a></div><div><img class="cereal" src="/assets/images/textures/cereals/' + t.cereal + '.jpg" alt="' + t.cereal + '"/></div></dd></dl></li>')
   $('#tweets').prepend(li)
   if ($('#tweets').children().length > 4) {
-    console.log('yo')
     $('#tweets .tweet:last-child').remove()
   }
 }
@@ -271,24 +269,22 @@ function connectToSocket () {
     showTweet(t)
   })
 
-  socket.on('connect', function () {
-    // console.log('connected')
-  })
-
   socket.on('update', function (tweet) {
     // console.log('update', tweet)
     // What cereal are we attributing this to?
     var cId = tweet.cereal
-    var cObj = cereals[cId]
-    if (!cObj || !cObj.count) {
-      console.log('Need to add – ', cId)
+    if (cereals) {
+      var cObj = cereals[cId]
+      if (!cObj || !cObj.count) {
+        console.log('Need to add – ', cId)
+      }
+      cObj.count++
+
+      createTweet(tweet)
+
+      addBoxes(cId, 1)
+      updateTable(cId, cObj.count)
     }
-    cObj.count++
-
-    createTweet(tweet)
-
-    addBoxes(cId, 1)
-    updateTable(cId, cObj.count)
   })
 
   socket.on('state', function (data) {
@@ -393,28 +389,30 @@ function buildColumns (data) {
     for (var i = 0; i < colCt; i++) {
       var do3d = new THREE.Object3D()
       var p = getPosition(index++)
-      do3d.position.x = p.x
-      do3d.position.y = p.y
-      do3d.position.z = p.z
+      if (p) {
+        do3d.position.x = p.x
+        do3d.position.y = p.y
+        do3d.position.z = p.z
 
-      if (do3d.position.z > 0) {
-        do3d.rotation.y = deg2rad(180)
+        if (do3d.position.z > 0) {
+          do3d.rotation.y = deg2rad(180)
+        }
+
+        cols.push(do3d)
+        world.add(do3d)
+
+        // add box shadow.
+        var geometry = new THREE.PlaneBufferGeometry(BOX_WIDTH * boxScale, BOX_HEIGHT * boxScale, 10)
+        var material = new THREE.MeshBasicMaterial({color: 0x402620})
+
+        var shadow = new THREE.Mesh(geometry, material)
+        shadow.scale.x = shadow.scale.y = 1.15
+        shadow.rotation.x = deg2rad(-90)
+        do3d.add(shadow)
       }
 
-      cols.push(do3d)
-      world.add(do3d)
-
-      // add box shadow.
-      var geometry = new THREE.PlaneBufferGeometry(BOX_WIDTH * boxScale, BOX_HEIGHT * boxScale, 10)
-      var material = new THREE.MeshBasicMaterial({color: 0x402620})
-
-      var shadow = new THREE.Mesh(geometry, material)
-      shadow.scale.x = shadow.scale.y = 1.15
-      shadow.rotation.x = deg2rad(-90)
-      do3d.add(shadow)
+      cereals[c['_id']] = {columns: cols, count: 0}
     }
-
-    cereals[c['_id']] = {columns: cols, count: 0}
   }
 }
 
